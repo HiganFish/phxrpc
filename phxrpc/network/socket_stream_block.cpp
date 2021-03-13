@@ -77,6 +77,10 @@ BlockTcpStream::~BlockTcpStream()
 	}
 }
 
+/**
+ * 绑定新的socket 并替换调原来内部的buff
+ * @param socket
+ */
 void BlockTcpStream::Attach(int socket)
 {
 	NewRdbuf(new BlockTcpStreamBuf(socket, buf_size_));
@@ -126,7 +130,17 @@ int BlockTcpStream::LastError()
 }
 
 /////////////////////////////////////////////////////////////
-//
+/**
+ * 创建一个阻塞 NO_DELAY的客户端文件描述符 并将其交给steam管理
+ * 如果bind_addr不为空 则在connect之前会调用bind
+ * @param stream
+ * @param ip
+ * @param port
+ * @param connect_timeout_ms
+ * @param bind_addr
+ * @param bind_port
+ * @return
+ */
 bool BlockTcpUtils::Open(BlockTcpStream* stream, const char* ip, unsigned short port, int connect_timeout_ms,
 	const char* bind_addr, int bind_port)
 {
@@ -167,6 +181,9 @@ bool BlockTcpUtils::Open(BlockTcpStream* stream, const char* ip, unsigned short 
 	in_addr.sin_addr.s_addr = inet_addr(ip);
 	in_addr.sin_port = htons(port);
 
+	/**
+	 * connect前设置成非阻塞 connect之后设置成阻塞
+	 */
 	BaseTcpUtils::SetNonBlock(sockfd, true);
 
 	int error = 0;

@@ -56,6 +56,11 @@ BaseTcpStreamBuf::~BaseTcpStreamBuf()
 	delete[] pbase();
 }
 
+/**
+ * 当输入缓冲区为空的时候 会调用这个函数 补充输入缓冲区
+ * 用于读取
+ * @return
+ */
 int BaseTcpStreamBuf::underflow()
 {
 	int ret = precv(eback(), buf_size_, 0);
@@ -70,7 +75,10 @@ int BaseTcpStreamBuf::underflow()
 		return traits_type::eof();
 	}
 }
-
+/**
+ * 输出缓冲区中增加了内容后调用此函数
+ * @return
+ */
 int BaseTcpStreamBuf::sync()
 {
 	int sent = 0;
@@ -149,8 +157,17 @@ bool BaseTcpStream::GetRemoteHost(char* ip, size_t size, int* port)
 	return 0 == ret;
 }
 
+/**
+ * 从stream中获取数据, 并将末尾的 '\r' `\n`替换为 '\0'
+ * @param line
+ * @param size
+ * @return
+ */
 std::istream& BaseTcpStream::getlineWithTrimRight(char* line, size_t size)
 {
+	/**
+	 * 读取
+	 */
 	if (getline(line, size).good())
 	{
 		for (char* pos = line + gcount() - 1; pos >= line; pos--)
