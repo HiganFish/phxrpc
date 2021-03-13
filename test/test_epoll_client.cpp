@@ -28,83 +28,90 @@ See the AUTHORS file for names of contributors.
 
 using namespace phxrpc;
 
-void echoclient(void * args) {
-    const char * ip = "127.0.0.1";
-    int port = 16161;
+void echoclient(void* args)
+{
+	const char* ip = "127.0.0.1";
+	int port = 16161;
 
-    UThreadEpollArgs_t * tt = (UThreadEpollArgs_t*) args;
+	UThreadEpollArgs_t* tt = (UThreadEpollArgs_t*)args;
 
-    int fd = ::socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+	int fd = ::socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
 
-    UThreadSocket_t * socket = tt->first->CreateSocket(fd);
+	UThreadSocket_t* socket = tt->first->CreateSocket(fd);
 
-    printf("start %d\n", fd);
+	printf("start %d\n", fd);
 
-    struct sockaddr_in in_addr;
-    memset(&in_addr, 0, sizeof(in_addr));
+	struct sockaddr_in in_addr;
+	memset(&in_addr, 0, sizeof(in_addr));
 
-    in_addr.sin_family = AF_INET;
-    in_addr.sin_addr.s_addr = inet_addr(ip);
-    in_addr.sin_port = htons(port);
+	in_addr.sin_family = AF_INET;
+	in_addr.sin_addr.s_addr = inet_addr(ip);
+	in_addr.sin_port = htons(port);
 
-    UThreadSetConnectTimeout(*socket, 1000);
+	UThreadSetConnectTimeout(*socket, 1000);
 
-    int ret = UThreadConnect(*socket, (struct sockaddr*) &in_addr, sizeof(in_addr));
-    printf("connect %d\n", ret);
-    if (ret != 0) {
-        UThreadClose(*socket);
-        free(socket);
-        free(tt);
+	int ret = UThreadConnect(*socket, (struct sockaddr*)&in_addr, sizeof(in_addr));
+	printf("connect %d\n", ret);
+	if (ret != 0)
+	{
+		UThreadClose(*socket);
+		free(socket);
+		free(tt);
 
-        return;
-    }
+		return;
+	}
 
-    char line[1024] = { 0 };
+	char line[1024] = { 0 };
 
-    UThreadRecv(*socket, line, sizeof(line), 0);
+	UThreadRecv(*socket, line, sizeof(line), 0);
 
-    for (int i = 0; i < 10; i++) {
-        snprintf(line, sizeof(line), "%d\n", i);
-        UThreadSend(*socket, line, strlen(line), 0);
+	for (int i = 0; i < 10; i++)
+	{
+		snprintf(line, sizeof(line), "%d\n", i);
+		UThreadSend(*socket, line, strlen(line), 0);
 
-        memset(line, 0, sizeof(line));
-        UThreadRecv(*socket, line, sizeof(line), 0);
+		memset(line, 0, sizeof(line));
+		UThreadRecv(*socket, line, sizeof(line), 0);
 
-        assert(i == atoi(line));
-    }
+		assert(i == atoi(line));
+	}
 
-    UThreadSend(*socket, "quit\n", 5, 0);
+	UThreadSend(*socket, "quit\n", 5, 0);
 
-    printf("end %d\n", fd);
+	printf("end %d\n", fd);
 
-    UThreadClose(*socket);
+	UThreadClose(*socket);
 
-    free(socket);
+	free(socket);
 
-    free(tt);
+	free(tt);
 }
 
-void test(int count) {
-    UThreadEpollScheduler scheduler(64 * 1024, count);
+void test(int count)
+{
+	UThreadEpollScheduler scheduler(64 * 1024, count);
 
-    for (int i = 0; i < count; i++) {
-        UThreadEpollArgs_t * args = (UThreadEpollArgs_t*) calloc(1, sizeof(UThreadEpollArgs_t));
-        args->first = &scheduler;
+	for (int i = 0; i < count; i++)
+	{
+		UThreadEpollArgs_t* args = (UThreadEpollArgs_t*)calloc(1, sizeof(UThreadEpollArgs_t));
+		args->first = &scheduler;
 
-        scheduler.AddTask(echoclient, args);
-    }
+		scheduler.AddTask(echoclient, args);
+	}
 
-    scheduler.Run();
+	scheduler.Run();
 }
 
-int main(int argc, char * argv[]) {
-    if (argc < 2) {
-        printf("Usage: %s <count>\n", argv[0]);
-        return -1;
-    }
+int main(int argc, char* argv[])
+{
+	if (argc < 2)
+	{
+		printf("Usage: %s <count>\n", argv[0]);
+		return -1;
+	}
 
-    test(atoi(argv[1]));
+	test(atoi(argv[1]));
 
-    return 0;
+	return 0;
 }
 

@@ -29,32 +29,34 @@ See the AUTHORS file for names of contributors.
 #include "uthread_context_base.h"
 #include "uthread_context_util.h"
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-class UThreadContextSystem : public UThreadContext {
+class UThreadContextSystem : public UThreadContext
+{
 public:
-    UThreadContextSystem(size_t stack_size, UThreadFunc_t func, void * args, 
-            UThreadDoneCallback_t callback, const bool need_stack_protect);
-    ~UThreadContextSystem();
+	UThreadContextSystem(size_t stack_size, UThreadFunc_t func, void* args,
+		UThreadDoneCallback_t callback, const bool need_stack_protect);
+	~UThreadContextSystem();
 
-    static UThreadContext * DoCreate(size_t stack_size, 
-            UThreadFunc_t func, void * args, UThreadDoneCallback_t callback,
-            const bool need_stack_protect);
+	static UThreadContext* DoCreate(size_t stack_size,
+		UThreadFunc_t func, void* args, UThreadDoneCallback_t callback,
+		const bool need_stack_protect);
 
-    void Make(UThreadFunc_t func, void * args) override;
-    bool Resume() override;
-    bool Yield() override;
+	void Make(UThreadFunc_t func, void* args) override;
+	bool Resume() override;
+	bool Yield() override;
 
-    ucontext_t * GetMainContext();
+	ucontext_t* GetMainContext();
 
 private:
-    static void UThreadFuncWrapper(uint32_t low32, uint32_t high32);
+	static void UThreadFuncWrapper(uint32_t low32, uint32_t high32);
 
-    ucontext_t context_;
-    UThreadFunc_t func_;
-    void * args_;
-    UThreadStackMemory stack_;
-    UThreadDoneCallback_t callback_;
+	ucontext_t context_;
+	UThreadFunc_t func_;
+	void* args_;
+	UThreadStackMemory stack_;
+	UThreadDoneCallback_t callback_;
 };
 
 } //namespace phxrpc

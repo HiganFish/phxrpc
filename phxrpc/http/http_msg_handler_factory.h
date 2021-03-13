@@ -23,18 +23,17 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/msg.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+class HttpMessageHandlerFactory : virtual public BaseMessageHandlerFactory
+{
+public:
+	HttpMessageHandlerFactory() = default;
+	virtual ~HttpMessageHandlerFactory() override = default;
 
-
-class HttpMessageHandlerFactory : virtual public BaseMessageHandlerFactory {
-  public:
-    HttpMessageHandlerFactory() = default;
-    virtual ~HttpMessageHandlerFactory() override = default;
-
-    virtual std::unique_ptr<BaseMessageHandler> Create() override;
+	virtual std::unique_ptr<BaseMessageHandler> Create() override;
 };
-
 
 }  // namespace phxrpc
 

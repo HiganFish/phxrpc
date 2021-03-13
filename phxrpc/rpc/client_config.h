@@ -27,49 +27,48 @@ See the AUTHORS file for names of contributors.
 #include <sys/types.h>
 #include <vector>
 
+namespace phxrpc
+{
 
-namespace phxrpc {
-
-
-typedef struct tagEndpoint {
-    char ip[32];
-    int port;
+typedef struct tagEndpoint
+{
+	char ip[32];
+	int port;
 } Endpoint_t;
 
+class ClientConfig
+{
+public:
+	ClientConfig();
 
-class ClientConfig {
-  public:
-    ClientConfig();
+	virtual ~ClientConfig();
 
-    virtual ~ClientConfig();
+	bool Read(const char* config_file);
 
-    bool Read(const char *config_file);
+	const Endpoint_t* GetRandom() const;
 
-    const Endpoint_t *GetRandom() const;
+	const Endpoint_t* GetByIndex(const size_t index) const;
 
-    const Endpoint_t *GetByIndex(const size_t index) const;
+	int GetConnectTimeoutMS();
 
-    int GetConnectTimeoutMS();
+	int GetSocketTimeoutMS();
 
-    int GetSocketTimeoutMS();
+	const char* GetPackageName() const;
 
-    const char *GetPackageName() const;
+	void SetClientMonitor(ClientMonitorPtr client_monitor);
 
-    void SetClientMonitor(ClientMonitorPtr client_monitor);
+	ClientMonitorPtr GetClientMonitor();
 
-    ClientMonitorPtr GetClientMonitor();
+private:
+	std::vector<Endpoint_t> endpoints_;
 
-  private:
-    std::vector<Endpoint_t> endpoints_;
+	int connect_timeout_ms_;
+	int socket_timeout_ms_;
 
-    int connect_timeout_ms_;
-    int socket_timeout_ms_;
+	char package_name_[64];
 
-    char package_name_[64];
-
-    ClientMonitorPtr client_monitor_;
+	ClientMonitorPtr client_monitor_;
 };
-
 
 }  // namespace phxrpc
 

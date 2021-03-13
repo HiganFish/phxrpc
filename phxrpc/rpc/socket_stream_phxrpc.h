@@ -24,22 +24,21 @@ See the AUTHORS file for names of contributors.
 #include "client_monitor.h"
 #include "phxrpc/network.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+class PhxrpcTcpUtils
+{
+public:
+	static bool Open(BlockTcpStream* stream, const char* ip,
+		unsigned short port, int connect_timeout_ms,
+		const char* bind_addr, int bind_port,
+		ClientMonitor& client_monitor);
 
-
-class PhxrpcTcpUtils {
-  public:
-    static bool Open(BlockTcpStream *stream, const char *ip,
-                     unsigned short port, int connect_timeout_ms,
-                     const char *bind_addr, int bind_port,
-                     ClientMonitor &client_monitor);
-
-    static bool Open(UThreadEpollScheduler *tt, UThreadTcpStream *stream,
-                     const char *ip, unsigned short port,
-                     int connect_timeout_ms, ClientMonitor &client_monitor);
+	static bool Open(UThreadEpollScheduler* tt, UThreadTcpStream* stream,
+		const char* ip, unsigned short port,
+		int connect_timeout_ms, ClientMonitor& client_monitor);
 };
-
 
 }  // namespace phxrpc
 

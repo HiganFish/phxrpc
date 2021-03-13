@@ -21,9 +21,10 @@ See the AUTHORS file for names of contributors.
 
 #pragma once
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-void __bad_assertion(const char *mess);
+void __bad_assertion(const char* mess);
 
 }
 

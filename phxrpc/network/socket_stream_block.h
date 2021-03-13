@@ -24,54 +24,58 @@ See the AUTHORS file for names of contributors.
 #include <iostream>
 #include "socket_stream_base.h"
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-class BlockTcpStreamBuf : public BaseTcpStreamBuf {
+class BlockTcpStreamBuf : public BaseTcpStreamBuf
+{
 public:
-    BlockTcpStreamBuf(int socket, size_t buf_size);
-    virtual ~BlockTcpStreamBuf();
+	BlockTcpStreamBuf(int socket, size_t buf_size);
+	virtual ~BlockTcpStreamBuf();
 
-    ssize_t precv(void * buf, size_t len, int flags);
-    ssize_t psend(const void *buf, size_t len, int flags);
+	ssize_t precv(void* buf, size_t len, int flags);
+	ssize_t psend(const void* buf, size_t len, int flags);
 
 private:
-    int socket_;
+	int socket_;
 };
 
 //////////////////////////////////////////////////////
 
-class BlockTcpStream : public BaseTcpStream {
+class BlockTcpStream : public BaseTcpStream
+{
 public:
-    BlockTcpStream(size_t buf_size = 1024);
-    ~BlockTcpStream();
+	BlockTcpStream(size_t buf_size = 1024);
+	~BlockTcpStream();
 
-    void Attach(int socket);
+	void Attach(int socket);
 
-    bool SetTimeout(int socket_timeout_ms);
+	bool SetTimeout(int socket_timeout_ms);
 
-    int SocketFd();
+	int SocketFd();
 
-    int LastError();
+	int LastError();
 
 private:
-    int socket_;
+	int socket_;
 };
 
 ///////////////////////////////////////////////////////
 
-class BlockTcpUtils {
+class BlockTcpUtils
+{
 public:
-    static bool Open(BlockTcpStream * stream, const char * ip, unsigned short port, int connect_timeout_ms,
-                     const char * bind_addr, int bind_port);
+	static bool Open(BlockTcpStream* stream, const char* ip, unsigned short port, int connect_timeout_ms,
+		const char* bind_addr, int bind_port);
 
-    static bool Listen(int * listenfd, const char * ip, unsigned short port);
+	static bool Listen(int* listenfd, const char* ip, unsigned short port);
 
-    /**
-     * return > 0 : how many events
-     * return 0 : timeout,
-     * return -1 : error, and errno is set appropriately
-     */
-    static int Poll(int fd, int events, int * revents, int timeout_ms);
+	/**
+	 * return > 0 : how many events
+	 * return 0 : timeout,
+	 * return -1 : error, and errno is set appropriately
+	 */
+	static int Poll(int fd, int events, int* revents, int timeout_ms);
 };
 
 }

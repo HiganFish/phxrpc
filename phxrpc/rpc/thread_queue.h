@@ -26,70 +26,88 @@ See the AUTHORS file for names of contributors.
 #include <queue>
 #include <atomic>
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-template <class T>
-class ThdQueue {
+template<class T>
+class ThdQueue
+{
 public:
-    ThdQueue() : break_out_(false), size_(0){ }
-    ~ThdQueue() { break_out(); }
+	ThdQueue()
+		:break_out_(false), size_(0)
+	{
+	}
+	~ThdQueue()
+	{
+		break_out();
+	}
 
-    size_t size() {
-        return static_cast<size_t>(size_);
-    }
+	size_t size()
+	{
+		return static_cast<size_t>(size_);
+	}
 
-    bool empty() {
-        return static_cast<size_t>(size_) == 0;
-    }
+	bool empty()
+	{
+		return static_cast<size_t>(size_) == 0;
+	}
 
-    void push(const T & value) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        queue_.push(value);
-        size_++;
-        cv_.notify_one();
-    }
+	void push(const T& value)
+	{
+		std::lock_guard<std::mutex> lock(mutex_);
+		queue_.push(value);
+		size_++;
+		cv_.notify_one();
+	}
 
-    bool pluck(T & value) {
-        std::unique_lock<std::mutex> lock(mutex_);
-        if (break_out_) {
-            return false;
-        }
-        while (queue_.empty()) {
-            cv_.wait(lock);
-            if (break_out_) {
-                return false;
-            }
-        }
-        size_--;
-        value = queue_.front();
-        queue_.pop();
-        return true;
-    }
+	bool pluck(T& value)
+	{
+		std::unique_lock<std::mutex> lock(mutex_);
+		if (break_out_)
+		{
+			return false;
+		}
+		while (queue_.empty())
+		{
+			cv_.wait(lock);
+			if (break_out_)
+			{
+				return false;
+			}
+		}
+		size_--;
+		value = queue_.front();
+		queue_.pop();
+		return true;
+	}
 
-    bool pick(T & value) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (queue_.empty()) {
-            return false;
-        }
+	bool pick(T& value)
+	{
+		std::lock_guard<std::mutex> lock(mutex_);
+		if (queue_.empty())
+		{
+			return false;
+		}
 
-        size_--;
-        value = queue_.front();
-        queue_.pop();
-        return true;
-    }
+		size_--;
+		value = queue_.front();
+		queue_.pop();
+		return true;
+	}
 
-    void break_out() {
-        std::lock_guard<std::mutex> lock(mutex_);
-        break_out_ = true;
-        cv_.notify_all();
-    }
+	void break_out()
+	{
+		std::lock_guard<std::mutex> lock(mutex_);
+		break_out_ = true;
+		cv_.notify_all();
+	}
 
 private:
-    std::mutex mutex_;
-    std::condition_variable cv_;
-    std::queue<T> queue_;
-    bool break_out_;
-    std::atomic_int size_;
+	std::mutex mutex_;
+	std::condition_variable cv_;
+	std::queue<T> queue_;
+	bool break_out_;
+	std::atomic_int size_;
 };
 
 } //namespace phxrpc

@@ -25,17 +25,15 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/http/http_msg_handler.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 using namespace std;
 
-
-unique_ptr<BaseMessageHandler> HttpMessageHandlerFactory::Create() {
-    return move(unique_ptr<BaseMessageHandler>(new HttpMessageHandler));
+unique_ptr<BaseMessageHandler> HttpMessageHandlerFactory::Create()
+{
+	return move(unique_ptr<BaseMessageHandler>(new HttpMessageHandler));
 }
-
 
 }  // namespace phxrpc
 

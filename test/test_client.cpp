@@ -29,33 +29,35 @@ See the AUTHORS file for names of contributors.
 #include "phxrpc/network.h"
 #include "phxrpc/http.h"
 
-
 using namespace phxrpc;
 
+int main(int argc, char** argv)
+{
+	for (size_t i{ 0 }; 20 > i; ++i)
+	{
+		phxrpc::BlockTcpStream socket;
+		if (phxrpc::BlockTcpUtils::Open(&socket, "127.0.0.1", 26161, 200, nullptr, 0))
+		{
+			socket.SetTimeout(5000);
+			HttpRequest request;
+			HttpResponse response;
 
-int main(int argc, char **argv) {
-    for (size_t i{0}; 20 > i; ++i) {
-        phxrpc::BlockTcpStream socket;
-        if(phxrpc::BlockTcpUtils::Open(&socket, "127.0.0.1", 26161, 200, nullptr, 0)) {
-            socket.SetTimeout(5000);
-            HttpRequest request;
-            HttpResponse response;
+			*(request.mutable_content()) = "hello grpc";
+			request.set_uri("abc");
+			request.AddHeader(HttpMessage::HEADER_CONTENT_LENGTH, request.GetContent().size());
+			int ret = HttpClient::Post(socket, request, &response);
+			if (ret != 0)
+			{
+				printf("post fail, %zu, ret %d\n", i, ret);
+				continue;
+			}
 
-            *(request.mutable_content()) = "hello grpc";
-            request.set_uri("abc");
-            request.AddHeader(HttpMessage::HEADER_CONTENT_LENGTH, request.GetContent().size());
-            int ret = HttpClient::Post(socket, request, &response);
-            if (ret != 0) {
-                printf("post fail, %zu, ret %d\n", i, ret);
-                continue;
-            }
+			const char* result = response.GetHeaderValue(HttpMessage::HEADER_X_PHXRPC_RESULT);
+			ret = atoi(nullptr == result ? "-1" : result);
+			printf("post ret %d\n", ret);
+		}
+	}
 
-            const char *result = response.GetHeaderValue(HttpMessage::HEADER_X_PHXRPC_RESULT);
-            ret = atoi(nullptr == result ? "-1" : result);
-            printf("post ret %d\n", ret);
-        }
-    }
-
-    return 0;
+	return 0;
 }
 

@@ -5,12 +5,13 @@
 同时修复了代码中的一些错误
 
 主要错误
+
 - test代码中函数名错误
 - test代码中部分符号错误
 
-
 gcc 8.3.1 下完全编译通过 如果不想编译test 则将根目录的CMakeLists.txt的
 `add_subdirectory(test)`注释
+
 ```
 [root@fish build]# make -j4
 [ 60%] Built target phxrpc

@@ -29,111 +29,130 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/file.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
-
-
-ClientConfig::ClientConfig() {
-    connect_timeout_ms_ = 200;
-    socket_timeout_ms_ = 5000;
-    memset(package_name_, 0, sizeof(package_name_));
+ClientConfig::ClientConfig()
+{
+	connect_timeout_ms_ = 200;
+	socket_timeout_ms_ = 5000;
+	memset(package_name_, 0, sizeof(package_name_));
 }
 
-ClientConfig::~ClientConfig() {
+ClientConfig::~ClientConfig()
+{
 }
 
-void ClientConfig::SetClientMonitor(ClientMonitorPtr client_monitor) {
-    client_monitor_ = client_monitor;
+void ClientConfig::SetClientMonitor(ClientMonitorPtr client_monitor)
+{
+	client_monitor_ = client_monitor;
 }
 
-ClientMonitorPtr ClientConfig::GetClientMonitor() {
-    return client_monitor_;
+ClientMonitorPtr ClientConfig::GetClientMonitor()
+{
+	return client_monitor_;
 }
 
-bool ClientConfig::Read(const char *config_file) {
-    Config config;
-    if (!config.InitConfig(config_file)) {
-        return false;
-    }
+bool ClientConfig::Read(const char* config_file)
+{
+	Config config;
+	if (!config.InitConfig(config_file))
+	{
+		return false;
+	}
 
-    int count{0};
-    bool succ{true};
-    succ &= config.ReadItem("Server", "ServerCount", &count);
-    if (!succ) {
-        log(LOG_ERR, "Config::%s key ServerCount not found", __func__);
-        return false;
-    }
+	int count{ 0 };
+	bool succ{ true };
+	succ &= config.ReadItem("Server", "ServerCount", &count);
+	if (!succ)
+	{
+		log(LOG_ERR, "Config::%s key ServerCount not found", __func__);
+		return false;
+	}
 
-    config.ReadItem("Server", "PackageName", package_name_, sizeof(package_name_));
+	config.ReadItem("Server", "PackageName", package_name_, sizeof(package_name_));
 
-    for (int i{0}; count > i; ++i) {
-        char section[64]{0};
-        snprintf(section, sizeof(section), "Server%d", i);
+	for (int i{ 0 }; count > i; ++i)
+	{
+		char section[64]{ 0 };
+		snprintf(section, sizeof(section), "Server%d", i);
 
-        Endpoint_t ep;
-        bool succ{true};
-        succ &= config.ReadItem(section, "IP", ep.ip, sizeof(ep.ip));
-        succ &= config.ReadItem(section, "Port", &(ep.port));
-        if (!succ) {
-            continue;
-        }
+		Endpoint_t ep;
+		bool succ{ true };
+		succ &= config.ReadItem(section, "IP", ep.ip, sizeof(ep.ip));
+		succ &= config.ReadItem(section, "Port", &(ep.port));
+		if (!succ)
+		{
+			continue;
+		}
 
-        endpoints_.push_back(ep);
-    }
+		endpoints_.push_back(ep);
+	}
 
-    config.ReadItem("ClientTimeout", "ConnectTimeoutMS", &connect_timeout_ms_);
-    config.ReadItem("ClientTimeout", "SocketTimeoutMS", &socket_timeout_ms_);
+	config.ReadItem("ClientTimeout", "ConnectTimeoutMS", &connect_timeout_ms_);
+	config.ReadItem("ClientTimeout", "SocketTimeoutMS", &socket_timeout_ms_);
 
-    if (endpoints_.size() == 0) {
-        log(LOG_ERR, "Config::%s no endpoints", __func__);
-    }
-    return endpoints_.size() > 0;
+	if (endpoints_.size() == 0)
+	{
+		log(LOG_ERR, "Config::%s no endpoints", __func__);
+	}
+	return endpoints_.size() > 0;
 }
 
-const Endpoint_t *ClientConfig::GetRandom() const {
-    const Endpoint_t *ret{nullptr};
+const Endpoint_t* ClientConfig::GetRandom() const
+{
+	const Endpoint_t* ret{ nullptr };
 
-    if (endpoints_.size() > 0) {
-        ret = &(endpoints_[random() % endpoints_.size()]);
-    }
+	if (endpoints_.size() > 0)
+	{
+		ret = &(endpoints_[random() % endpoints_.size()]);
+	}
 
-    if (!ret) {
-        if (client_monitor_.get()) {
-            client_monitor_->GetEndpointFail();
-        }
+	if (!ret)
+	{
+		if (client_monitor_.get())
+		{
+			client_monitor_->GetEndpointFail();
+		}
 
-        log(LOG_ERR, "GetRandom fail, list.size %lu", endpoints_.size());
-    }
-    return ret;
+		log(LOG_ERR, "GetRandom fail, list.size %lu", endpoints_.size());
+	}
+	return ret;
 }
 
-const Endpoint_t *ClientConfig::GetByIndex(const size_t index) const {
-    const Endpoint_t *ret{nullptr};
+const Endpoint_t* ClientConfig::GetByIndex(const size_t index) const
+{
+	const Endpoint_t* ret{ nullptr };
 
-    if (index < endpoints_.size()) {
-        ret = &(endpoints_[index]);
-    }
+	if (index < endpoints_.size())
+	{
+		ret = &(endpoints_[index]);
+	}
 
-    if (!ret) {
-        if (client_monitor_.get()) {
-            client_monitor_->GetEndpointFail();
-        }
-    }
-    return ret;
+	if (!ret)
+	{
+		if (client_monitor_.get())
+		{
+			client_monitor_->GetEndpointFail();
+		}
+	}
+	return ret;
 }
 
-int ClientConfig::GetConnectTimeoutMS() {
-    return connect_timeout_ms_;
+int ClientConfig::GetConnectTimeoutMS()
+{
+	return connect_timeout_ms_;
 }
 
-int ClientConfig::GetSocketTimeoutMS() {
-    return socket_timeout_ms_;
+int ClientConfig::GetSocketTimeoutMS()
+{
+	return socket_timeout_ms_;
 }
 
-const char *ClientConfig::GetPackageName() const {
-    return package_name_;
+const char* ClientConfig::GetPackageName() const
+{
+	return package_name_;
 }
-
 
 }  // namespace phxrpc
 

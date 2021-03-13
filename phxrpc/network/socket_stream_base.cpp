@@ -37,140 +37,175 @@ See the AUTHORS file for names of contributors.
 #include "socket_stream_base.h"
 #include "phxrpc/file/log_utils.h"
 
-namespace phxrpc {
+namespace phxrpc
+{
 
 BaseTcpStreamBuf::BaseTcpStreamBuf(size_t buf_size)
-        : buf_size_(buf_size) {
-    char * gbuf = new char[buf_size_];
-    char * pbuf = new char[buf_size_];
+	:buf_size_(buf_size)
+{
+	char* gbuf = new char[buf_size_];
+	char* pbuf = new char[buf_size_];
 
-    setg(gbuf, gbuf, gbuf);
-    setp(pbuf, pbuf + buf_size_);
+	setg(gbuf, gbuf, gbuf);
+	setp(pbuf, pbuf + buf_size_);
 }
 
-BaseTcpStreamBuf::~BaseTcpStreamBuf() {
-    delete[] eback();
-    delete[] pbase();
+BaseTcpStreamBuf::~BaseTcpStreamBuf()
+{
+	delete[] eback();
+	delete[] pbase();
 }
 
-int BaseTcpStreamBuf::underflow() {
-    int ret = precv(eback(), buf_size_, 0);
-    if (ret > 0) {
-        setg(eback(), eback(), eback() + ret);
-        return traits_type::to_int_type(*gptr());
-    } else {
-        //phxrpc::log(LOG_ERR, "ret %d errno %d,%s", ret, errno, strerror(errno));
-        return traits_type::eof();
-    }
+int BaseTcpStreamBuf::underflow()
+{
+	int ret = precv(eback(), buf_size_, 0);
+	if (ret > 0)
+	{
+		setg(eback(), eback(), eback() + ret);
+		return traits_type::to_int_type(*gptr());
+	}
+	else
+	{
+		//phxrpc::log(LOG_ERR, "ret %d errno %d,%s", ret, errno, strerror(errno));
+		return traits_type::eof();
+	}
 }
 
-int BaseTcpStreamBuf::sync() {
-    int sent = 0;
-    int total = pptr() - pbase();
-    while (sent < total) {
-        int ret = psend(pbase() + sent, total - sent, 0);
-        if (ret > 0) {
-            sent += ret;
-        } else {
-            //phxrpc::log(LOG_ERR, "sync ret %d errno %d,%s", ret, errno, strerror(errno));
-            return -1;
-        }
-    }
+int BaseTcpStreamBuf::sync()
+{
+	int sent = 0;
+	int total = pptr() - pbase();
+	while (sent < total)
+	{
+		int ret = psend(pbase() + sent, total - sent, 0);
+		if (ret > 0)
+		{
+			sent += ret;
+		}
+		else
+		{
+			//phxrpc::log(LOG_ERR, "sync ret %d errno %d,%s", ret, errno, strerror(errno));
+			return -1;
+		}
+	}
 
-    setp(pbase(), pbase() + buf_size_);
-    pbump(0);
+	setp(pbase(), pbase() + buf_size_);
+	pbump(0);
 
-    return 0;
+	return 0;
 }
 
-int BaseTcpStreamBuf::overflow(int c) {
-    if (-1 == sync()) {
-        return traits_type::eof();
-    } else {
-        if (!traits_type::eq_int_type(c, traits_type::eof())) {
-            sputc(traits_type::to_char_type(c));
-        }
+int BaseTcpStreamBuf::overflow(int c)
+{
+	if (-1 == sync())
+	{
+		return traits_type::eof();
+	}
+	else
+	{
+		if (!traits_type::eq_int_type(c, traits_type::eof()))
+		{
+			sputc(traits_type::to_char_type(c));
+		}
 
-        return traits_type::not_eof(c);
-    }
+		return traits_type::not_eof(c);
+	}
 }
 
 //---------------------------------------------------------
 
 BaseTcpStream::BaseTcpStream(size_t buf_size)
-        : std::iostream(NULL),
-          buf_size_(buf_size) {
+	:std::iostream(NULL),
+	 buf_size_(buf_size)
+{
 }
 
-BaseTcpStream::~BaseTcpStream() {
-    delete rdbuf();
+BaseTcpStream::~BaseTcpStream()
+{
+	delete rdbuf();
 }
 
-void BaseTcpStream::NewRdbuf(BaseTcpStreamBuf * buf) {
-    std::streambuf * old = rdbuf(buf);
-    delete old;
+void BaseTcpStream::NewRdbuf(BaseTcpStreamBuf* buf)
+{
+	std::streambuf* old = rdbuf(buf);
+	delete old;
 }
 
-bool BaseTcpStream::GetRemoteHost(char * ip, size_t size, int * port) {
-    struct sockaddr_in addr;
-    socklen_t slen = sizeof(addr);
-    memset(&addr, 0, sizeof(addr));
+bool BaseTcpStream::GetRemoteHost(char* ip, size_t size, int* port)
+{
+	struct sockaddr_in addr;
+	socklen_t slen = sizeof(addr);
+	memset(&addr, 0, sizeof(addr));
 
-    int ret = getpeername(SocketFd(), (struct sockaddr*) &addr, &slen);
+	int ret = getpeername(SocketFd(), (struct sockaddr*)&addr, &slen);
 
-    if (0 == ret) {
-        inet_ntop(AF_INET, &addr, ip, size);
-        if (NULL != port)
-            *port = ntohs(addr.sin_port);
-    }
+	if (0 == ret)
+	{
+		inet_ntop(AF_INET, &addr, ip, size);
+		if (NULL != port)
+			*port = ntohs(addr.sin_port);
+	}
 
-    return 0 == ret;
+	return 0 == ret;
 }
 
-std::istream & BaseTcpStream::getlineWithTrimRight(char * line, size_t size) {
-    if (getline(line, size).good()) {
-        for (char * pos = line + gcount() - 1; pos >= line; pos--) {
-            if ('\0' == *pos || '\r' == *pos || '\n' == *pos) {
-                *pos = '\0';
-            } else {
-                break;
-            }
-        }
-    }
+std::istream& BaseTcpStream::getlineWithTrimRight(char* line, size_t size)
+{
+	if (getline(line, size).good())
+	{
+		for (char* pos = line + gcount() - 1; pos >= line; pos--)
+		{
+			if ('\0' == *pos || '\r' == *pos || '\n' == *pos)
+			{
+				*pos = '\0';
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
 
-    return *this;
+	return *this;
 }
 
 //---------------------------------------------------------
 
-bool BaseTcpUtils::SetNonBlock(int fd, bool flag) {
-    int ret = 0;
+bool BaseTcpUtils::SetNonBlock(int fd, bool flag)
+{
+	int ret = 0;
 
-    int tmp = fcntl(fd, F_GETFL, 0);
+	int tmp = fcntl(fd, F_GETFL, 0);
 
-    if (flag) {
-        ret = fcntl(fd, F_SETFL, tmp | O_NONBLOCK);
-    } else {
-        ret = fcntl(fd, F_SETFL, tmp & (~O_NONBLOCK));
-    }
+	if (flag)
+	{
+		ret = fcntl(fd, F_SETFL, tmp | O_NONBLOCK);
+	}
+	else
+	{
+		ret = fcntl(fd, F_SETFL, tmp & (~O_NONBLOCK));
+	}
 
-    if (0 != ret) {
-        phxrpc::log(LOG_ERR, "SetBlock(%d) fail, errno %d, %s", fd, errno, strerror(errno));
-    }
+	if (0 != ret)
+	{
+		phxrpc::log(LOG_ERR, "SetBlock(%d) fail, errno %d, %s", fd, errno, strerror(errno));
+	}
 
-    return 0 == ret;
+	return 0 == ret;
 }
 
-bool BaseTcpUtils::SetNoDelay(int fd, bool flag) {
-    int tmp = flag ? 1 : 0;
+bool BaseTcpUtils::SetNoDelay(int fd, bool flag)
+{
+	int tmp = flag ? 1 : 0;
 
-    int ret = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char*) &tmp, sizeof(tmp));
+	int ret = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char*)&tmp, sizeof(tmp));
 
-    if (0 != ret) {
-        phxrpc::log(LOG_WARNING, "SetDelay(%d) fail, errno %d, %s", fd, errno, strerror(errno));
-    }
+	if (0 != ret)
+	{
+		phxrpc::log(LOG_WARNING, "SetDelay(%d) fail, errno %d, %s", fd, errno, strerror(errno));
+	}
 
-    return 0 == ret;
+	return 0 == ret;
 }
 
 }  //namespace phxrpc

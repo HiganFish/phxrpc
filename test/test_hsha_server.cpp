@@ -23,32 +23,32 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/rpc.h"
 
-
 using namespace phxrpc;
 
-
-void Dispatch(const BaseRequest& req, BaseResponse *resp, void *args) {
-    printf("dispatch args %p\n", args);
-    resp->set_result(0);
+void Dispatch(const BaseRequest& req, BaseResponse* resp, void* args)
+{
+	printf("dispatch args %p\n", args);
+	resp->set_result(0);
 }
 
-int main(int argc, char **argv) {
-    HshaServerConfig config;
-    config.SetBindIP("127.0.0.1");
-    config.SetPort(26161);
-    config.SetMaxThreads(2);
-    //config.SetLogDir("~/log");
-    //config.SetLogLevel(3);
+int main(int argc, char** argv)
+{
+	HshaServerConfig config;
+	config.SetBindIP("127.0.0.1");
+	config.SetPort(26161);
+	config.SetMaxThreads(2);
+	//config.SetLogDir("~/log");
+	//config.SetLogLevel(3);
 
-    printf("args %p\n", &config);
+	printf("args %p\n", &config);
 
-    phxrpc::openlog(argv[0], config.GetLogDir(), config.GetLogLevel());
+	phxrpc::openlog(argv[0], config.GetLogDir(), config.GetLogLevel());
 
-    HshaServer server(config, Dispatch, &config);
-    server.RunForever();
+	HshaServer server(config, Dispatch, &config);
+	server.RunForever();
 
-    phxrpc::closelog();
+	phxrpc::closelog();
 
-    return 0;
+	return 0;
 }
 

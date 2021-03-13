@@ -10,9 +10,9 @@ SET(TESTS
         test_timer
         test_uthread
         test_uthread_context
-)
+        )
 
-foreach(test ${TESTS})
+foreach (test ${TESTS})
     add_executable(${test} ${test}.cpp)
     target_link_libraries(${test} phxrpc)
-endforeach()
+endforeach ()

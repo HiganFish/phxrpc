@@ -21,9 +21,8 @@ See the AUTHORS file for names of contributors.
 
 #pragma once
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 class BaseTcpStream;
 
@@ -31,34 +30,37 @@ class HttpMessage;
 class HttpRequest;
 class HttpResponse;
 
-class HttpProtocol {
-  public:
-    enum {
-        MAX_RECV_LEN = 8192
-    };
+class HttpProtocol
+{
+public:
+	enum
+	{
+		MAX_RECV_LEN = 8192
+	};
 
-    enum {
-        SC_NOT_MODIFIED = 304
-    };
+	enum
+	{
+		SC_NOT_MODIFIED = 304
+	};
 
-    enum class Direction {
-        NONE = 0,
-        REQUEST,
-        RESPONSE,
-        MAX,
-    };
+	enum class Direction
+	{
+		NONE = 0,
+		REQUEST,
+		RESPONSE,
+		MAX,
+	};
 
-    static void FixRespHeaders(const HttpRequest &req, HttpResponse *resp);
-    static void FixRespHeaders(bool keep_alive, const char *version, HttpResponse *resp);
-    static int SendReqHeader(BaseTcpStream &socket, const char *method, const HttpRequest &req);
-    static int RecvRespStartLine(BaseTcpStream &socket, HttpResponse *resp);
-    static int RecvReqStartLine(BaseTcpStream &socket, HttpRequest *req);
-    static int RecvHeaders(BaseTcpStream &socket, HttpMessage *msg);
-    static int RecvBody(BaseTcpStream &socket, HttpMessage *msg);
-    static int RecvReq(BaseTcpStream &socket, HttpRequest *req);
-    static int RecvResp(BaseTcpStream &socket, HttpResponse *resp);
+	static void FixRespHeaders(const HttpRequest& req, HttpResponse* resp);
+	static void FixRespHeaders(bool keep_alive, const char* version, HttpResponse* resp);
+	static int SendReqHeader(BaseTcpStream& socket, const char* method, const HttpRequest& req);
+	static int RecvRespStartLine(BaseTcpStream& socket, HttpResponse* resp);
+	static int RecvReqStartLine(BaseTcpStream& socket, HttpRequest* req);
+	static int RecvHeaders(BaseTcpStream& socket, HttpMessage* msg);
+	static int RecvBody(BaseTcpStream& socket, HttpMessage* msg);
+	static int RecvReq(BaseTcpStream& socket, HttpRequest* req);
+	static int RecvResp(BaseTcpStream& socket, HttpResponse* resp);
 };
-
 
 }  // namespace phxrpc
 

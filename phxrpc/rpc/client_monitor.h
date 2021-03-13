@@ -21,40 +21,39 @@ See the AUTHORS file for names of contributors.
 
 #pragma once
 
-
 #include <cinttypes>
 #include <memory>
 #include <sys/types.h>
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+class ClientMonitor
+{
+public:
+	ClientMonitor();
 
+	virtual ~ClientMonitor();
 
-class ClientMonitor {
-  public:
-    ClientMonitor();
+	virtual void ClientConnect(bool result);
 
-    virtual ~ClientMonitor();
+	virtual void SendBytes(size_t bytes);
 
-    virtual void ClientConnect(bool result);
+	virtual void SendError();
 
-    virtual void SendBytes(size_t bytes);
+	virtual void SendCount();
 
-    virtual void SendError();
+	virtual void RecvBytes(size_t bytes);
 
-    virtual void SendCount();
+	virtual void RecvCount();
 
-    virtual void RecvBytes(size_t bytes);
+	virtual void RecvError();
 
-    virtual void RecvCount();
+	virtual void RequestCost(uint64_t begin_time, uint64_t end_time);
 
-    virtual void RecvError();
+	virtual void GetEndpointFail();
 
-    virtual void RequestCost(uint64_t begin_time, uint64_t end_time);
-
-    virtual void GetEndpointFail();
-
-    virtual void ClientCall(const int cmd_id, const char *method_name);
+	virtual void ClientCall(const int cmd_id, const char* method_name);
 };
 
 typedef std::shared_ptr<ClientMonitor> ClientMonitorPtr;

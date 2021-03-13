@@ -24,22 +24,21 @@ See the AUTHORS file for names of contributors.
 #include <string>
 #include <vector>
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+class FileUtils final
+{
+public:
+	static bool ReadFile(const char* path, std::string* content);
 
+	static void StrSplitList(const std::string& str, const std::string& delimiters,
+		std::vector<std::string>& results);
 
-class FileUtils final {
-  public:
-    static bool ReadFile(const char *path, std::string *content);
-
-    static void StrSplitList(const std::string &str, const std::string &delimiters,
-                             std::vector<std::string> &results);
-
-  private:
-    FileUtils();
-    ~FileUtils();
+private:
+	FileUtils();
+	~FileUtils();
 };
-
 
 }
 

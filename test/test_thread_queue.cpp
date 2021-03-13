@@ -26,55 +26,66 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/rpc/thread_queue.h"
 
-
 using namespace std;
 using namespace phxrpc;
 
+class PluckThread
+{
+public:
+	PluckThread(ThdQueue<int>* thd_queue, const size_t thread_count)
+		:
+		thd_queue_(thd_queue)
+	{
+		for (size_t i = 0; i < thread_count; i++)
+		{
+			thread* thd = new thread(&PluckThread::Func, this, i);
+			thread_list_.push_back(thd);
+		}
+	}
 
-class PluckThread {
-  public:
-    PluckThread(ThdQueue<int> * thd_queue, const size_t thread_count) :
-    thd_queue_(thd_queue) {
-        for (size_t i = 0; i < thread_count; i++) {
-            thread * thd = new thread(&PluckThread::Func, this, i);
-            thread_list_.push_back(thd);
-        }
-    }
+	~PluckThread()
+	{
+		thd_queue_->break_out();
+		for (auto& thd : thread_list_)
+		{
+			thd->join();
+			delete thd;
+		}
+	}
 
-    ~PluckThread() {
-        thd_queue_->break_out();
-        for (auto & thd : thread_list_) {
-            thd->join();
-            delete thd;
-        }
-    }
+	void Func(size_t id)
+	{
+		int n = 0;
+		do
+		{
+			bool succ = thd_queue_->pluck(n);
+			if (succ)
+			{
+				printf("thread_id(%zu) value(%d)\n", id, n);
+			}
+			else
+			{
+				break;
+			}
+		} while (!thd_queue_->empty());
+	}
 
-    void Func(size_t id) {
-        int n = 0;
-        do {
-            bool succ = thd_queue_->pluck(n);
-            if (succ) {
-                printf("thread_id(%zu) value(%d)\n", id, n);
-            } else {
-                break;
-            }
-        } while (!thd_queue_->empty());
-    }
-
-  private:
-    ThdQueue<int> * thd_queue_;
-    vector<thread *> thread_list_;
+private:
+	ThdQueue<int>* thd_queue_;
+	vector<thread*> thread_list_;
 };
 
-int main(int argc, char ** argv) {
-    ThdQueue<int> thd_queue;
-    size_t n_size = 10;
-    PluckThread threads(&thd_queue, n_size);
+int main(int argc, char** argv)
+{
+	ThdQueue<int> thd_queue;
+	size_t n_size = 10;
+	PluckThread threads(&thd_queue, n_size);
 
-    for (size_t i = 0; i < n_size; i++) {
-        thd_queue.push(i);
-    }
+	for (size_t i = 0; i < n_size; i++)
+	{
+		thd_queue.push(i);
+	}
 
-    return 0;
+	return 0;
 }
 

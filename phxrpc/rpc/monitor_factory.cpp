@@ -24,38 +24,43 @@ See the AUTHORS file for names of contributors.
 
 #include "monitor_factory.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+static MonitorFactory* g_monitor_factory_ = nullptr;
 
-
-static MonitorFactory *g_monitor_factory_ = nullptr;
-
-MonitorFactory::MonitorFactory() {
+MonitorFactory::MonitorFactory()
+{
 }
 
-MonitorFactory::~MonitorFactory() {
+MonitorFactory::~MonitorFactory()
+{
 }
 
-void MonitorFactory::SetFactory(MonitorFactory *factory) {
-    g_monitor_factory_ = factory;
+void MonitorFactory::SetFactory(MonitorFactory* factory)
+{
+	g_monitor_factory_ = factory;
 }
 
-MonitorFactory *MonitorFactory::GetFactory() {
-    static MonitorFactory monitor_factory;
-    if (!g_monitor_factory_) {
-        return &monitor_factory;
-    }
-    return g_monitor_factory_;
+MonitorFactory* MonitorFactory::GetFactory()
+{
+	static MonitorFactory monitor_factory;
+	if (!g_monitor_factory_)
+	{
+		return &monitor_factory;
+	}
+	return g_monitor_factory_;
 }
 
-ClientMonitorPtr MonitorFactory::CreateClientMonitor(const char *package_name) {
-    return ClientMonitorPtr(new ClientMonitor());
+ClientMonitorPtr MonitorFactory::CreateClientMonitor(const char* package_name)
+{
+	return ClientMonitorPtr(new ClientMonitor());
 }
 
-ServerMonitorPtr MonitorFactory::CreateServerMonitor(const char *package_name) {
-    return ServerMonitorPtr(new ServerMonitor());
+ServerMonitorPtr MonitorFactory::CreateServerMonitor(const char* package_name)
+{
+	return ServerMonitorPtr(new ServerMonitor());
 }
-
 
 }  // namespace phxrpc
 

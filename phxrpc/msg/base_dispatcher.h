@@ -26,41 +26,43 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/msg/base_msg.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+template<typename Dispatcher>
+class BaseDispatcher
+{
+public:
+	typedef int (Dispatcher::*URIFunc_t)(const BaseRequest& req, BaseResponse* const resp);
 
+	typedef std::map<std::string, URIFunc_t> URIFuncMap;
 
-template <typename Dispatcher>
-class BaseDispatcher {
-  public:
-    typedef int (Dispatcher::*URIFunc_t)(const BaseRequest &req, BaseResponse *const resp);
+	BaseDispatcher(Dispatcher& dispatcher, const URIFuncMap& uri_func_map)
+		:dispatcher_(dispatcher), uri_func_map_(uri_func_map)
+	{
+	}
 
-    typedef std::map<std::string, URIFunc_t> URIFuncMap;
+	virtual ~BaseDispatcher() = default;
 
-    BaseDispatcher(Dispatcher &dispatcher, const URIFuncMap &uri_func_map)
-            : dispatcher_(dispatcher), uri_func_map_(uri_func_map) {
-    }
+	bool Dispatch(const BaseRequest& req, BaseResponse* const resp)
+	{
+		int ret{ -1 };
+		typename URIFuncMap::const_iterator iter(uri_func_map_.find(req.uri()));
 
-    virtual ~BaseDispatcher() = default;
+		if (uri_func_map_.end() != iter)
+		{
+			ret = (dispatcher_.*iter->second)(req, resp);
+		}
 
-    bool Dispatch(const BaseRequest &req, BaseResponse *const resp) {
-        int ret{-1};
-        typename URIFuncMap::const_iterator iter(uri_func_map_.find(req.uri()));
+		resp->set_result(ret);
 
-        if (uri_func_map_.end() != iter) {
-            ret = (dispatcher_.*iter->second)(req, resp);
-        }
+		return uri_func_map_.end() != iter;
+	}
 
-        resp->set_result(ret);
-
-        return uri_func_map_.end() != iter;
-    }
-
-  private:
-    Dispatcher &dispatcher_;
-    const URIFuncMap &uri_func_map_;
+private:
+	Dispatcher& dispatcher_;
+	const URIFuncMap& uri_func_map_;
 };
-
 
 }  // namespace phxrpc
 

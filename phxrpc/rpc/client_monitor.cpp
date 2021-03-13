@@ -25,46 +25,56 @@ See the AUTHORS file for names of contributors.
 
 #include "client_monitor.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
-
-
-ClientMonitor::ClientMonitor() {
+ClientMonitor::ClientMonitor()
+{
 }
 
-ClientMonitor::~ClientMonitor() {
+ClientMonitor::~ClientMonitor()
+{
 }
 
-void ClientMonitor::ClientConnect(bool result) {
+void ClientMonitor::ClientConnect(bool result)
+{
 }
 
-void ClientMonitor::SendBytes(size_t bytes) {
+void ClientMonitor::SendBytes(size_t bytes)
+{
 }
 
-void ClientMonitor::RecvBytes(size_t bytes) {
+void ClientMonitor::RecvBytes(size_t bytes)
+{
 }
 
-void ClientMonitor::RequestCost(uint64_t begin_time, uint64_t end_time) {
+void ClientMonitor::RequestCost(uint64_t begin_time, uint64_t end_time)
+{
 }
 
-void ClientMonitor::SendError() {
+void ClientMonitor::SendError()
+{
 }
 
-void ClientMonitor::SendCount() {
+void ClientMonitor::SendCount()
+{
 }
 
-void ClientMonitor::RecvError() {
+void ClientMonitor::RecvError()
+{
 }
 
-void ClientMonitor::RecvCount() {
+void ClientMonitor::RecvCount()
+{
 }
 
-void ClientMonitor::GetEndpointFail() {
+void ClientMonitor::GetEndpointFail()
+{
 }
 
-void ClientMonitor::ClientCall(const int cmd_id, const char *method_name) {
+void ClientMonitor::ClientCall(const int cmd_id, const char* method_name)
+{
 }
-
 
 }  // namespace phxrpc
 

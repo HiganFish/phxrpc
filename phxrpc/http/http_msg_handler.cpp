@@ -26,60 +26,68 @@ See the AUTHORS file for names of contributors.
 #include "phxrpc/http/http_protocol.h"
 #include "phxrpc/network/socket_stream_base.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 using namespace std;
 
+int HttpMessageHandler::RecvRequest(BaseTcpStream& socket, BaseRequest*& req)
+{
+	HttpRequest* http_req{ new HttpRequest };
 
-int HttpMessageHandler::RecvRequest(BaseTcpStream &socket, BaseRequest *&req) {
-    HttpRequest *http_req{new HttpRequest};
+	int ret{ HttpProtocol::RecvReq(socket, http_req) };
+	if (0 == ret)
+	{
+		req_ = req = http_req;
+		version_ = (http_req->version() != nullptr ? http_req->version() : "");
+		keep_alive_ = http_req->keep_alive();
+	}
+	else
+	{
+		delete http_req;
+		http_req = nullptr;
+	}
 
-    int ret{HttpProtocol::RecvReq(socket, http_req)};
-    if (0 == ret) {
-        req_ = req = http_req;
-        version_ = (http_req->version() != nullptr ? http_req->version() : "");
-        keep_alive_ = http_req->keep_alive();
-    } else {
-        delete http_req;
-        http_req = nullptr;
-    }
-
-    return ret;
+	return ret;
 }
 
-int HttpMessageHandler::RecvResponse(BaseTcpStream &socket, BaseResponse *&resp) {
-    HttpResponse *http_resp{new HttpResponse};
+int HttpMessageHandler::RecvResponse(BaseTcpStream& socket, BaseResponse*& resp)
+{
+	HttpResponse* http_resp{ new HttpResponse };
 
-    int ret{HttpProtocol::RecvResp(socket, http_resp)};
-    if (0 == ret) {
-        resp = http_resp;
-    } else {
-        delete http_resp;
-        http_resp = nullptr;
-    }
+	int ret{ HttpProtocol::RecvResp(socket, http_resp) };
+	if (0 == ret)
+	{
+		resp = http_resp;
+	}
+	else
+	{
+		delete http_resp;
+		http_resp = nullptr;
+	}
 
-    return ret;
+	return ret;
 }
 
-int HttpMessageHandler::GenRequest(BaseRequest *&req) {
-    req = new HttpRequest;
+int HttpMessageHandler::GenRequest(BaseRequest*& req)
+{
+	req = new HttpRequest;
 
-    return 0;
+	return 0;
 }
 
-int HttpMessageHandler::GenResponse(BaseResponse *&resp) {
-    resp = req_->GenResponse();
-    resp->Modify(keep_alive_, version_);
+int HttpMessageHandler::GenResponse(BaseResponse*& resp)
+{
+	resp = req_->GenResponse();
+	resp->Modify(keep_alive_, version_);
 
-    return 0;
+	return 0;
 }
 
-bool HttpMessageHandler::keep_alive() const {
-    return keep_alive_;
+bool HttpMessageHandler::keep_alive() const
+{
+	return keep_alive_;
 }
-
 
 }  // namespace phxrpc
 

@@ -26,121 +26,145 @@ See the AUTHORS file for names of contributors.
 
 #include "opt_map.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
-
-
-OptMap::OptMap(const char *optstring) {
-    opt_string_ = strdup(optstring);
+OptMap::OptMap(const char* optstring)
+{
+	opt_string_ = strdup(optstring);
 }
 
-OptMap::~OptMap() {
-    if (NULL != opt_string_)
-        free(opt_string_);
+OptMap::~OptMap()
+{
+	if (NULL != opt_string_)
+		free(opt_string_);
 }
 
-bool OptMap::Parse(int argc, char * argv[]) {
-    bool ret = true;
+bool OptMap::Parse(int argc, char* argv[])
+{
+	bool ret = true;
 
-    int c = 0;
+	int c = 0;
 
-    while ((c = getopt(argc, argv, opt_string_)) != EOF) {
-        if ('?' == c || ':' == c) {
-            ret = false;
-        } else {
-            opt_[c].push_back((NULL == ::optarg) ? "" : ::optarg);
-        }
-    }
+	while ((c = getopt(argc, argv, opt_string_)) != EOF)
+	{
+		if ('?' == c || ':' == c)
+		{
+			ret = false;
+		}
+		else
+		{
+			opt_[c].push_back((NULL == ::optarg) ? "" : ::optarg);
+		}
+	}
 
-    for (int i = optind; i < argc; i++) {
-        non_opt_.push_back(argv[i]);
-    }
+	for (int i = optind; i < argc; i++)
+	{
+		non_opt_.push_back(argv[i]);
+	}
 
-    return ret;
+	return ret;
 }
 
-size_t OptMap::GetNonOptCount() {
-    return non_opt_.size();
+size_t OptMap::GetNonOptCount()
+{
+	return non_opt_.size();
 }
 
-const char *OptMap::GetNonOpt(size_t index) {
-    if (index > 0 && index < non_opt_.size()) {
-        return non_opt_[index].c_str();
-    }
+const char* OptMap::GetNonOpt(size_t index)
+{
+	if (index > 0 && index < non_opt_.size())
+	{
+		return non_opt_[index].c_str();
+	}
 
-    return NULL;
+	return NULL;
 }
 
-bool OptMap::Has(char c) const {
-    const option_map_::const_iterator iter = opt_.find(c);
+bool OptMap::Has(char c) const
+{
+	const option_map_::const_iterator iter = opt_.find(c);
 
-    return opt_.end() != iter;
+	return opt_.end() != iter;
 }
 
-size_t OptMap::Count(char c) const {
-    const option_map_::const_iterator iter = opt_.find(c);
+size_t OptMap::Count(char c) const
+{
+	const option_map_::const_iterator iter = opt_.find(c);
 
-    return (opt_.end() != iter) ? iter->second.size() : 0;
+	return (opt_.end() != iter) ? iter->second.size() : 0;
 }
 
-const char *OptMap::Get(char c, size_t index) const {
-    const option_map_::const_iterator iter = opt_.find(c);
+const char* OptMap::Get(char c, size_t index) const
+{
+	const option_map_::const_iterator iter = opt_.find(c);
 
-    if (opt_.end() != iter) {
-        if (index >= iter->second.size()) {
-            return NULL;
-        } else {
-            return iter->second[index];
-        }
-    } else {
-        return NULL;
-    }
+	if (opt_.end() != iter)
+	{
+		if (index >= iter->second.size())
+		{
+			return NULL;
+		}
+		else
+		{
+			return iter->second[index];
+		}
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
-bool OptMap::GetInt(char c, int *val, size_t index) const {
-    return GetInt32(c, val, index);
+bool OptMap::GetInt(char c, int* val, size_t index) const
+{
+	return GetInt32(c, val, index);
 }
 
-bool OptMap::GetInt32(char c, int *val, size_t index) const {
-    const char *tmp = Get(c, index);
+bool OptMap::GetInt32(char c, int* val, size_t index) const
+{
+	const char* tmp = Get(c, index);
 
-    if (tmp)
-        *val = strtol(tmp, nullptr, 10);
+	if (tmp)
+		*val = strtol(tmp, nullptr, 10);
 
-    return nullptr != tmp;
+	return nullptr != tmp;
 }
 
-bool OptMap::GetInt64(char c, int64_t *val, size_t index) const {
-    const char *tmp = Get(c, index);
+bool OptMap::GetInt64(char c, int64_t* val, size_t index) const
+{
+	const char* tmp = Get(c, index);
 
-    if (tmp)
-        *val = strtoll(tmp, nullptr, 10);
+	if (tmp)
+		*val = strtoll(tmp, nullptr, 10);
 
-    return nullptr != tmp;
+	return nullptr != tmp;
 }
 
-bool OptMap::GetUInt(char c, uint32_t *val, size_t index) const {
-    return GetUInt32(c, val, index);
+bool OptMap::GetUInt(char c, uint32_t* val, size_t index) const
+{
+	return GetUInt32(c, val, index);
 }
 
-bool OptMap::GetUInt32(char c, uint32_t *val, size_t index) const {
-    const char *tmp = Get(c, index);
+bool OptMap::GetUInt32(char c, uint32_t* val, size_t index) const
+{
+	const char* tmp = Get(c, index);
 
-    if (tmp)
-        *val = strtoul(tmp, nullptr, 10);
+	if (tmp)
+		*val = strtoul(tmp, nullptr, 10);
 
-    return nullptr != tmp;
+	return nullptr != tmp;
 }
 
-bool OptMap::GetUInt64(char c, uint64_t *val, size_t index) const {
-    const char *tmp = Get(c, index);
+bool OptMap::GetUInt64(char c, uint64_t* val, size_t index) const
+{
+	const char* tmp = Get(c, index);
 
-    if (tmp)
-        *val = strtoull(tmp, nullptr, 10);
+	if (tmp)
+		*val = strtoull(tmp, nullptr, 10);
 
-    return nullptr != tmp;
+	return nullptr != tmp;
 }
-
 
 }
 

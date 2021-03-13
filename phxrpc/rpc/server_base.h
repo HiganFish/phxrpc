@@ -24,33 +24,33 @@ See the AUTHORS file for names of contributors.
 #include "server_monitor.h"
 #include "phxrpc/network.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 class DataFlow;
 
-typedef struct tagDispatcherArgs {
-    ServerMonitorPtr server_monitor;
-    UThreadEpollScheduler *server_worker_uthread_scheduler{nullptr};
-    void *service_args{nullptr};
-    void *data_flow_args{nullptr};
+typedef struct tagDispatcherArgs
+{
+	ServerMonitorPtr server_monitor;
+	UThreadEpollScheduler* server_worker_uthread_scheduler{ nullptr };
+	void* service_args{ nullptr };
+	void* data_flow_args{ nullptr };
 
-    tagDispatcherArgs(ServerMonitorPtr server_monitor_value,
-                      UThreadEpollScheduler *const server_worker_uthread_scheduler_value,
-                      void *const service_args_value, void *const data_flow_args_value)
-            : server_monitor(server_monitor_value),
-              server_worker_uthread_scheduler(server_worker_uthread_scheduler_value),
-              service_args(service_args_value), data_flow_args(data_flow_args_value) {
-    }
+	tagDispatcherArgs(ServerMonitorPtr server_monitor_value,
+		UThreadEpollScheduler* const server_worker_uthread_scheduler_value,
+		void* const service_args_value, void* const data_flow_args_value)
+		:server_monitor(server_monitor_value),
+		 server_worker_uthread_scheduler(server_worker_uthread_scheduler_value),
+		 service_args(service_args_value), data_flow_args(data_flow_args_value)
+	{
+	}
 } DispatcherArgs_t;
 
-
-class ServerUtils {
-  public:
-    static void Daemonize();
+class ServerUtils
+{
+public:
+	static void Daemonize();
 };
-
 
 }
 

@@ -21,12 +21,10 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/msg/base_msg_handler_factory.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 using namespace std;
-
 
 }  // namespace phxrpc
 

@@ -34,28 +34,31 @@
 #include <google/protobuf/port_def.inc>
 #define PROTOBUF_INTERNAL_EXPORT_phxrpc_2eproto
 PROTOBUF_NAMESPACE_OPEN
-namespace internal {
+namespace internal
+{
 class AnyMetadata;
 }  // namespace internal
 PROTOBUF_NAMESPACE_CLOSE
 
 // Internal implementation detail -- do not use these members.
-struct TableStruct_phxrpc_2eproto {
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTableField entries[]
-    PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
-    PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[1]
-    PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
-  static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
-  static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
+struct TableStruct_phxrpc_2eproto
+{
+	static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTableField entries[]
+	PROTOBUF_SECTION_VARIABLE(protodesc_cold);
+	static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
+	PROTOBUF_SECTION_VARIABLE(protodesc_cold);
+	static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[1]
+	PROTOBUF_SECTION_VARIABLE(protodesc_cold);
+	static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
+	static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
+	static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_phxrpc_2eproto;
 ::PROTOBUF_NAMESPACE_ID::Metadata descriptor_table_phxrpc_2eproto_metadata_getter(int index);
 PROTOBUF_NAMESPACE_OPEN
 PROTOBUF_NAMESPACE_CLOSE
-namespace phxrpc {
+namespace phxrpc
+{
 
 // ===================================================================
 
@@ -63,26 +66,32 @@ namespace phxrpc {
 // ===================================================================
 
 static const int kCmdIDFieldNumber = 2000000;
-extern ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
-    ::PROTOBUF_NAMESPACE_ID::internal::PrimitiveTypeTraits< ::PROTOBUF_NAMESPACE_ID::int32 >, 5, false >
-  CmdID;
+extern ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier<::google::protobuf::MethodOptions,
+                                                              ::PROTOBUF_NAMESPACE_ID::internal::PrimitiveTypeTraits<::PROTOBUF_NAMESPACE_ID::int32>,
+                                                              5,
+                                                              false>
+	CmdID;
 static const int kOptStringFieldNumber = 2000001;
-extern ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
-    ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits, 9, false >
-  OptString;
+extern ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier<::google::protobuf::MethodOptions,
+                                                              ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits,
+                                                              9,
+                                                              false>
+	OptString;
 static const int kUsageFieldNumber = 2000002;
-extern ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
-    ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits, 9, false >
-  Usage;
+extern ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier<::google::protobuf::MethodOptions,
+                                                              ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits,
+                                                              9,
+                                                              false>
+	Usage;
 
 // ===================================================================
 
 #ifdef __GNUC__
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
 #ifdef __GNUC__
-  #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #endif  // __GNUC__
 
 // @@protoc_insertion_point(namespace_scope)

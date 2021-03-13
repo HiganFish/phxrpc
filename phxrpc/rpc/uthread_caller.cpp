@@ -27,147 +27,169 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/network.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 using namespace std;
 
-
-UThreadCaller::UThreadCaller(UThreadEpollScheduler *uthread_scheduler,
-                             google::protobuf::Message &request,
-                             google::protobuf::Message *response,
-                             ClientMonitor &client_monitor,
-                             BaseMessageHandlerFactory &msg_handler_factory,
-                             const string &uri, const int cmd_id, const Endpoint_t &ep,
-                             const int connect_timeout_ms, const int socket_timeout_ms,
-                             UThreadCallback callback, void *args)
-        : uthread_scheduler_(uthread_scheduler),
-          request_(&request),
-          response_(response),
-          client_monitor_(client_monitor),
-          msg_handler_factory_(msg_handler_factory),
-          uri_(uri),
-          cmd_id_(cmd_id),
-          ep_(ep),
-          mconnect_timeout_ms(connect_timeout_ms),
-          msocket_timeout_ms(socket_timeout_ms),
-          call_ret_(-1),
-          callback_(callback),
-          args_(args) {
+UThreadCaller::UThreadCaller(UThreadEpollScheduler* uthread_scheduler,
+	google::protobuf::Message& request,
+	google::protobuf::Message* response,
+	ClientMonitor& client_monitor,
+	BaseMessageHandlerFactory& msg_handler_factory,
+	const string& uri, const int cmd_id, const Endpoint_t& ep,
+	const int connect_timeout_ms, const int socket_timeout_ms,
+	UThreadCallback callback, void* args)
+	:uthread_scheduler_(uthread_scheduler),
+	 request_(&request),
+	 response_(response),
+	 client_monitor_(client_monitor),
+	 msg_handler_factory_(msg_handler_factory),
+	 uri_(uri),
+	 cmd_id_(cmd_id),
+	 ep_(ep),
+	 mconnect_timeout_ms(connect_timeout_ms),
+	 msocket_timeout_ms(socket_timeout_ms),
+	 call_ret_(-1),
+	 callback_(callback),
+	 args_(args)
+{
 }
 
-UThreadCaller::~UThreadCaller() {
+UThreadCaller::~UThreadCaller()
+{
 }
 
-google::protobuf::Message &UThreadCaller::GetRequest() {
-    return *request_;
+google::protobuf::Message& UThreadCaller::GetRequest()
+{
+	return *request_;
 }
 
-google::protobuf::Message *UThreadCaller::GetResponse() {
-    return response_;
+google::protobuf::Message* UThreadCaller::GetResponse()
+{
+	return response_;
 }
 
-const string &UThreadCaller::uri() {
-    return uri_;
+const string& UThreadCaller::uri()
+{
+	return uri_;
 }
 
-int UThreadCaller::GetCmdID() {
-    return cmd_id_;
+int UThreadCaller::GetCmdID()
+{
+	return cmd_id_;
 }
 
-UThreadEpollScheduler *UThreadCaller::Getuthread_scheduler() {
-    return uthread_scheduler_;
+UThreadEpollScheduler* UThreadCaller::Getuthread_scheduler()
+{
+	return uthread_scheduler_;
 }
 
-Endpoint_t *UThreadCaller::GetEP() {
-    return &ep_;
+Endpoint_t* UThreadCaller::GetEP()
+{
+	return &ep_;
 }
 
-const int UThreadCaller::GetRet() {
-    return call_ret_;
+const int UThreadCaller::GetRet()
+{
+	return call_ret_;
 }
 
-void UThreadCaller::SetRet(const int ret) {
-    call_ret_ = ret;
+void UThreadCaller::SetRet(const int ret)
+{
+	call_ret_ = ret;
 }
 
-void UThreadCaller::Callback() {
-    if (nullptr != callback_) {
-        callback_(this, args_);
-    }
+void UThreadCaller::Callback()
+{
+	if (nullptr != callback_)
+	{
+		callback_(this, args_);
+	}
 }
 
-void UThreadCaller::Call(void *args) {
-    UThreadCaller *uthread_caller = (UThreadCaller *)args;
+void UThreadCaller::Call(void* args)
+{
+	UThreadCaller* uthread_caller = (UThreadCaller*)args;
 
-    UThreadTcpStream socket;
-    Endpoint_t *ep = uthread_caller->GetEP();
-    bool open_ret = phxrpc::UThreadTcpUtils::Open(
-            uthread_caller->Getuthread_scheduler(), &socket, ep->ip, ep->port,
-            uthread_caller->mconnect_timeout_ms);
-    if (open_ret) {
-        socket.SetTimeout(uthread_caller->msocket_timeout_ms);
-        phxrpc::Caller caller(socket, uthread_caller->client_monitor_,
-                              uthread_caller->msg_handler_factory_);
-        caller.GetRequest()->set_uri(uthread_caller->uri().c_str());
-        uthread_caller->SetRet(caller.Call(uthread_caller->GetRequest(),
-                                           uthread_caller->GetResponse()));
-    } else {
-        uthread_caller->SetRet(-1);
-    }
-    uthread_caller->client_monitor_.ClientConnect(open_ret);
+	UThreadTcpStream socket;
+	Endpoint_t* ep = uthread_caller->GetEP();
+	bool open_ret = phxrpc::UThreadTcpUtils::Open(
+		uthread_caller->Getuthread_scheduler(), &socket, ep->ip, ep->port,
+		uthread_caller->mconnect_timeout_ms);
+	if (open_ret)
+	{
+		socket.SetTimeout(uthread_caller->msocket_timeout_ms);
+		phxrpc::Caller caller(socket, uthread_caller->client_monitor_,
+			uthread_caller->msg_handler_factory_);
+		caller.GetRequest()->set_uri(uthread_caller->uri().c_str());
+		uthread_caller->SetRet(caller.Call(uthread_caller->GetRequest(),
+			uthread_caller->GetResponse()));
+	}
+	else
+	{
+		uthread_caller->SetRet(-1);
+	}
+	uthread_caller->client_monitor_.ClientConnect(open_ret);
 
-    uthread_caller->Callback();
+	uthread_caller->Callback();
 }
 
-void UThreadCaller::Close() {
-    uthread_scheduler_->Close();
+void UThreadCaller::Close()
+{
+	uthread_scheduler_->Close();
 }
 
 ///////////////////////////////////////////////////////////////////
 
-UThreadMultiCaller::UThreadMultiCaller(ClientMonitor &client_monitor,
-                                       BaseMessageHandlerFactory &msg_handler_factory)
-        : uthread_scheduler_(64 * 1024, 300), client_monitor_(client_monitor),
-          msg_handler_factory_(msg_handler_factory) {
+UThreadMultiCaller::UThreadMultiCaller(ClientMonitor& client_monitor,
+	BaseMessageHandlerFactory& msg_handler_factory)
+	:uthread_scheduler_(64 * 1024, 300), client_monitor_(client_monitor),
+	 msg_handler_factory_(msg_handler_factory)
+{
 }
 
-UThreadMultiCaller::~UThreadMultiCaller() {
-    for (size_t i{0}; i < uthread_caller_list_.size(); ++i) {
-        if (nullptr != uthread_caller_list_[i]) {
-            delete uthread_caller_list_[i];
-        }
-    }
+UThreadMultiCaller::~UThreadMultiCaller()
+{
+	for (size_t i{ 0 }; i < uthread_caller_list_.size(); ++i)
+	{
+		if (nullptr != uthread_caller_list_[i])
+		{
+			delete uthread_caller_list_[i];
+		}
+	}
 
-    uthread_caller_list_.clear();
+	uthread_caller_list_.clear();
 }
 
-const int UThreadMultiCaller::GetRet(size_t index) {
-    if (index >= uthread_caller_list_.size()) {
-        return -1;
-    }
-    return uthread_caller_list_[index]->GetRet();
+const int UThreadMultiCaller::GetRet(size_t index)
+{
+	if (index >= uthread_caller_list_.size())
+	{
+		return -1;
+	}
+	return uthread_caller_list_[index]->GetRet();
 }
 
-void UThreadMultiCaller::AddCaller(google::protobuf::Message &request,
-                                   google::protobuf::Message *response,
-                                   const string &uri, const int cmd_id, const Endpoint_t &ep,
-                                   const int connect_timeout_ms, const int socket_timeout_ms,
-                                   UThreadCallback callback, void *args) {
-    UThreadCaller *caller = new UThreadCaller(&uthread_scheduler_,
-            request, response, client_monitor_, msg_handler_factory_, uri, cmd_id, ep,
-            connect_timeout_ms, socket_timeout_ms, callback, args);
-    assert(nullptr != caller);
-    uthread_caller_list_.push_back(caller);
+void UThreadMultiCaller::AddCaller(google::protobuf::Message& request,
+	google::protobuf::Message* response,
+	const string& uri, const int cmd_id, const Endpoint_t& ep,
+	const int connect_timeout_ms, const int socket_timeout_ms,
+	UThreadCallback callback, void* args)
+{
+	UThreadCaller* caller = new UThreadCaller(&uthread_scheduler_,
+		request, response, client_monitor_, msg_handler_factory_, uri, cmd_id, ep,
+		connect_timeout_ms, socket_timeout_ms, callback, args);
+	assert(nullptr != caller);
+	uthread_caller_list_.push_back(caller);
 
-    uthread_scheduler_.AddTask(UThreadCaller::Call, (void *)caller);
+	uthread_scheduler_.AddTask(UThreadCaller::Call, (void*)caller);
 }
 
-void UThreadMultiCaller::MultiCall() {
-    uthread_scheduler_.Run();
+void UThreadMultiCaller::MultiCall()
+{
+	uthread_scheduler_.Run();
 }
-
 
 }
 

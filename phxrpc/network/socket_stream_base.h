@@ -23,57 +23,62 @@ See the AUTHORS file for names of contributors.
 
 #include <iostream>
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-enum SocketStreamError {
-    SocketStreamError_Refused = -1,
-    SocketStreamError_Timeout = -202,
-    SocketStreamError_Normal_Closed = -303,
+enum SocketStreamError
+{
+	SocketStreamError_Refused = -1,
+	SocketStreamError_Timeout = -202,
+	SocketStreamError_Normal_Closed = -303,
 };
 
-class BaseTcpStreamBuf : public std::streambuf {
+class BaseTcpStreamBuf : public std::streambuf
+{
 public:
-    BaseTcpStreamBuf(size_t buf_size);
-    virtual ~BaseTcpStreamBuf();
+	BaseTcpStreamBuf(size_t buf_size);
+	virtual ~BaseTcpStreamBuf();
 
-    int underflow();
-    int overflow(int c = traits_type::eof());
-    int sync();
+	int underflow();
+	int overflow(int c = traits_type::eof());
+	int sync();
 
 protected:
-    virtual ssize_t precv(void * buf, size_t len, int flags) = 0;
-    virtual ssize_t psend(const void *buf, size_t len, int flags) = 0;
+	virtual ssize_t precv(void* buf, size_t len, int flags) = 0;
+	virtual ssize_t psend(const void* buf, size_t len, int flags) = 0;
 
-    const size_t buf_size_;
+	const size_t buf_size_;
 };
 
-class BaseTcpStream : public std::iostream {
+class BaseTcpStream : public std::iostream
+{
 public:
-    BaseTcpStream(size_t buf_size = 4096);
+	BaseTcpStream(size_t buf_size = 4096);
 
-    virtual ~BaseTcpStream();
+	virtual ~BaseTcpStream();
 
-    virtual bool SetTimeout(int socket_timeout_ms) = 0;
+	virtual bool SetTimeout(int socket_timeout_ms) = 0;
 
-    void NewRdbuf(BaseTcpStreamBuf * buf);
+	void NewRdbuf(BaseTcpStreamBuf* buf);
 
-    bool GetRemoteHost(char * ip, size_t size, int * port = NULL);
+	bool GetRemoteHost(char* ip, size_t size, int* port = NULL);
 
-    std::istream & getlineWithTrimRight(char * line, size_t size);
+	std::istream& getlineWithTrimRight(char* line, size_t size);
 
-    virtual int LastError() = 0;
+	virtual int LastError() = 0;
 
 protected:
-    virtual int SocketFd() = 0;
+	virtual int SocketFd() = 0;
 
-    const size_t buf_size_;
+	const size_t buf_size_;
 };
 
-class BaseTcpUtils {
+class BaseTcpUtils
+{
 public:
-    static bool SetNonBlock(int fd, bool flag);
+	static bool SetNonBlock(int fd, bool flag);
 
-    static bool SetNoDelay(int fd, bool flag);
+	static bool SetNoDelay(int fd, bool flag);
 };
 
 }  //namespace phxrpc

@@ -16,7 +16,8 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
-namespace phxrpc {
+namespace phxrpc
+{
 }  // namespace phxrpc
 static constexpr ::PROTOBUF_NAMESPACE_ID::Metadata* file_level_metadata_phxrpc_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_phxrpc_2eproto = nullptr;
@@ -26,43 +27,53 @@ static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = n
 static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_phxrpc_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\014phxrpc.proto\022\006phxrpc\032 google/protobuf/"
-  "descriptor.proto:/\n\005CmdID\022\036.google.proto"
-  "buf.MethodOptions\030\200\211z \001(\005:3\n\tOptString\022\036"
-  ".google.protobuf.MethodOptions\030\201\211z \001(\t:/"
-  "\n\005Usage\022\036.google.protobuf.MethodOptions\030"
-  "\202\211z \001(\tb\006proto3"
-  ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_phxrpc_2eproto_deps[1] = {
-  &::descriptor_table_google_2fprotobuf_2fdescriptor_2eproto,
+	"\n\014phxrpc.proto\022\006phxrpc\032 google/protobuf/"
+	"descriptor.proto:/\n\005CmdID\022\036.google.proto"
+	"buf.MethodOptions\030\200\211z \001(\005:3\n\tOptString\022\036"
+	".google.protobuf.MethodOptions\030\201\211z \001(\t:/"
+	"\n\005Usage\022\036.google.protobuf.MethodOptions\030"
+	"\202\211z \001(\tb\006proto3";
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_phxrpc_2eproto_deps[1] = {
+	&::descriptor_table_google_2fprotobuf_2fdescriptor_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_phxrpc_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_phxrpc_2eproto = {
-  false, false, 215, descriptor_table_protodef_phxrpc_2eproto, "phxrpc.proto", 
-  &descriptor_table_phxrpc_2eproto_once, descriptor_table_phxrpc_2eproto_deps, 1, 0,
-  schemas, file_default_instances, TableStruct_phxrpc_2eproto::offsets,
-  file_level_metadata_phxrpc_2eproto, file_level_enum_descriptors_phxrpc_2eproto, file_level_service_descriptors_phxrpc_2eproto,
+	false, false, 215, descriptor_table_protodef_phxrpc_2eproto, "phxrpc.proto",
+	&descriptor_table_phxrpc_2eproto_once, descriptor_table_phxrpc_2eproto_deps, 1, 0,
+	schemas, file_default_instances, TableStruct_phxrpc_2eproto::offsets,
+	file_level_metadata_phxrpc_2eproto, file_level_enum_descriptors_phxrpc_2eproto,
+	file_level_service_descriptors_phxrpc_2eproto,
 };
 PROTOBUF_ATTRIBUTE_WEAK ::PROTOBUF_NAMESPACE_ID::Metadata
-descriptor_table_phxrpc_2eproto_metadata_getter(int index) {
-  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_phxrpc_2eproto);
-  return descriptor_table_phxrpc_2eproto.file_level_metadata[index];
+descriptor_table_phxrpc_2eproto_metadata_getter(int index)
+{
+	::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_phxrpc_2eproto);
+	return descriptor_table_phxrpc_2eproto.file_level_metadata[index];
 }
 
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_phxrpc_2eproto(&descriptor_table_phxrpc_2eproto);
-namespace phxrpc {
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
-    ::PROTOBUF_NAMESPACE_ID::internal::PrimitiveTypeTraits< ::PROTOBUF_NAMESPACE_ID::int32 >, 5, false >
-  CmdID(kCmdIDFieldNumber, 0);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_phxrpc_2eproto(
+	&descriptor_table_phxrpc_2eproto);
+namespace phxrpc
+{
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier<::google::protobuf::MethodOptions,
+                                                                                        ::PROTOBUF_NAMESPACE_ID::internal::PrimitiveTypeTraits<
+	                                                                                        ::PROTOBUF_NAMESPACE_ID::int32>,
+                                                                                        5,
+                                                                                        false>
+	CmdID(kCmdIDFieldNumber, 0);
 const std::string OptString_default("");
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
-    ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits, 9, false >
-  OptString(kOptStringFieldNumber, OptString_default);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier<::google::protobuf::MethodOptions,
+                                                                                        ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits,
+                                                                                        9,
+                                                                                        false>
+	OptString(kOptStringFieldNumber, OptString_default);
 const std::string Usage_default("");
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
-    ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits, 9, false >
-  Usage(kUsageFieldNumber, Usage_default);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY ::PROTOBUF_NAMESPACE_ID::internal::ExtensionIdentifier<::google::protobuf::MethodOptions,
+                                                                                        ::PROTOBUF_NAMESPACE_ID::internal::StringTypeTraits,
+                                                                                        9,
+                                                                                        false>
+	Usage(kUsageFieldNumber, Usage_default);
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace phxrpc

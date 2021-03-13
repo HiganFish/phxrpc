@@ -30,9 +30,8 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/file/log_utils.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 }
 

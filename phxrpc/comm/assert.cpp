@@ -22,11 +22,13 @@ See the AUTHORS file for names of contributors.
 #include <cstdio>
 #include <cstdlib>
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-void __bad_assertion(const char *mess) {
-    fputs(mess, stderr);
-    abort();
+void __bad_assertion(const char* mess)
+{
+	fputs(mess, stderr);
+	abort();
 }
 
 }

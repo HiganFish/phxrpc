@@ -27,49 +27,59 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/network/socket_stream_block.h"
 
-void test(int times) {
-    int step = (times < 20 ? 20 : times) / 20;
+void test(int times)
+{
+	int step = (times < 20 ? 20 : times) / 20;
 
-    for (int i = 0; i < 20; i++) {
-        phxrpc::BlockTcpStream stream;
-        if (!phxrpc::BlockTcpUtils::Open(&stream, "127.0.0.1", 16161, 100, NULL, 0)) {
-            printf("Connect fail\n");
-            return;
-        }
+	for (int i = 0; i < 20; i++)
+	{
+		phxrpc::BlockTcpStream stream;
+		if (!phxrpc::BlockTcpUtils::Open(&stream, "127.0.0.1", 16161, 100, NULL, 0))
+		{
+			printf("Connect fail\n");
+			return;
+		}
 
-        char line[128] = { 0 };
-        if (!stream.getlineWithTrimRight(line, sizeof(line)).good()) {
-            printf("Welcome message fail, errno %d, %s\n", errno, strerror(errno));
-            return;
-        }
+		char line[128] = { 0 };
+		if (!stream.getlineWithTrimRight(line, sizeof(line)).good())
+		{
+			printf("Welcome message fail, errno %d, %s\n", errno, strerror(errno));
+			return;
+		}
 
-        for (int i = 0; i < step; i++) {
-            stream << i << std::endl;
+		for (int i = 0; i < step; i++)
+		{
+			stream << i << std::endl;
 
-            if (stream.getline(line, sizeof(line)).good()) {
-                assert(i == atoi(line));
-            } else {
-                break;
-            }
-        }
+			if (stream.getline(line, sizeof(line)).good())
+			{
+				assert(i == atoi(line));
+			}
+			else
+			{
+				break;
+			}
+		}
 
-        stream << "quit" << std::endl;
+		stream << "quit" << std::endl;
 
-        printf("#");
-        fflush (stdout);
-    }
+		printf("#");
+		fflush(stdout);
+	}
 
-    printf("\n");
+	printf("\n");
 }
 
-int main(int argc, char * argv[]) {
-    if (argc < 2) {
-        printf("Usage: %s <run times>\n", argv[0]);
-        return 0;
-    }
+int main(int argc, char* argv[])
+{
+	if (argc < 2)
+	{
+		printf("Usage: %s <run times>\n", argv[0]);
+		return 0;
+	}
 
-    test(atoi(argv[1]));
+	test(atoi(argv[1]));
 
-    return 0;
+	return 0;
 }
 

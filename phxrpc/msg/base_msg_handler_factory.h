@@ -24,23 +24,22 @@ See the AUTHORS file for names of contributors.
 #include <functional>
 #include <memory>
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 class BaseMessageHandlerFactory;
 using BaseMessageHandlerFactoryCreateFunc =
-        std::function<std::unique_ptr<BaseMessageHandlerFactory>()>;
+std::function<std::unique_ptr<BaseMessageHandlerFactory>()>;
 class BaseMessageHandler;
 
-class BaseMessageHandlerFactory {
-  public:
-    BaseMessageHandlerFactory() = default;
-    virtual ~BaseMessageHandlerFactory() = default;
+class BaseMessageHandlerFactory
+{
+public:
+	BaseMessageHandlerFactory() = default;
+	virtual ~BaseMessageHandlerFactory() = default;
 
-    virtual std::unique_ptr<BaseMessageHandler> Create() = 0;
+	virtual std::unique_ptr<BaseMessageHandler> Create() = 0;
 };
-
 
 }  // namespace phxrpc
 

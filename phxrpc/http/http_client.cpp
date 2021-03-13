@@ -33,81 +33,95 @@ See the AUTHORS file for names of contributors.
 #include "phxrpc/http/http_protocol.h"
 #include "phxrpc/network/socket_stream_base.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+int HttpClient::Get(BaseTcpStream& socket, const HttpRequest& req, HttpResponse* resp)
+{
+	int ret{ HttpProtocol::SendReqHeader(socket, "GET", req) };
 
+	if (0 == ret)
+	{
+		ret = HttpProtocol::RecvRespStartLine(socket, resp);
+		if (0 == ret)
+			ret = HttpProtocol::RecvHeaders(socket, resp);
+		if (0 == ret && SC_NOT_MODIFIED != resp->status_code())
+		{
+			ret = HttpProtocol::RecvBody(socket, resp);
+		}
+	}
 
-int HttpClient::Get(BaseTcpStream &socket, const HttpRequest &req, HttpResponse *resp) {
-    int ret{HttpProtocol::SendReqHeader(socket, "GET", req)};
-
-    if (0 == ret) {
-        ret = HttpProtocol::RecvRespStartLine(socket, resp);
-        if (0 == ret)
-            ret = HttpProtocol::RecvHeaders(socket, resp);
-        if (0 == ret && SC_NOT_MODIFIED != resp->status_code()) {
-            ret = HttpProtocol::RecvBody(socket, resp);
-        }
-    }
-
-    return static_cast<int>(ret);
+	return static_cast<int>(ret);
 }
 
-int HttpClient::Post(BaseTcpStream &socket, const HttpRequest &req, HttpResponse *resp) {
-    PostStat stat;
-    int ret{Post(socket, req, resp, &stat)};
-    return ret;
+int HttpClient::Post(BaseTcpStream& socket, const HttpRequest& req, HttpResponse* resp)
+{
+	PostStat stat;
+	int ret{ Post(socket, req, resp, &stat) };
+	return ret;
 }
 
-int HttpClient::Post(BaseTcpStream &socket, const HttpRequest &req, HttpResponse *resp,
-                     PostStat *post_stat) {
-    int ret{HttpProtocol::SendReqHeader(socket, "POST", req)};
+int HttpClient::Post(BaseTcpStream& socket, const HttpRequest& req, HttpResponse* resp,
+	PostStat* post_stat)
+{
+	int ret{ HttpProtocol::SendReqHeader(socket, "POST", req) };
 
-    if (0 == ret) {
-        socket << req.content();
-        if(!socket.flush().good())
-            ret = static_cast<int>(socket.LastError());
-    } else {
-        if (SocketStreamError_Normal_Closed != ret) {
-            post_stat->send_error_ = true;
-            phxrpc::log(LOG_ERR, "ERR: sendReqHeader fail");
-        }
-        return static_cast<int>(ret);
-    }
+	if (0 == ret)
+	{
+		socket << req.content();
+		if (!socket.flush().good())
+			ret = static_cast<int>(socket.LastError());
+	}
+	else
+	{
+		if (SocketStreamError_Normal_Closed != ret)
+		{
+			post_stat->send_error_ = true;
+			phxrpc::log(LOG_ERR, "ERR: sendReqHeader fail");
+		}
+		return static_cast<int>(ret);
+	}
 
-    if (0 == ret) {
-        ret = HttpProtocol::RecvRespStartLine(socket, resp);
-        if (0 == ret)
-            ret = HttpProtocol::RecvHeaders(socket, resp);
+	if (0 == ret)
+	{
+		ret = HttpProtocol::RecvRespStartLine(socket, resp);
+		if (0 == ret)
+			ret = HttpProtocol::RecvHeaders(socket, resp);
 
-        if (0 == ret && SC_NOT_MODIFIED != resp->status_code()) {
-            ret = HttpProtocol::RecvBody(socket, resp);
-        }
+		if (0 == ret && SC_NOT_MODIFIED != resp->status_code())
+		{
+			ret = HttpProtocol::RecvBody(socket, resp);
+		}
 
-        if (0 != ret && SocketStreamError_Normal_Closed != ret) {
-            post_stat->recv_error_ = true;
-        }
-    } else {
-        if (SocketStreamError_Normal_Closed != ret) {
-            post_stat->send_error_ = true;
-            phxrpc::log(LOG_ERR, "ERR: sendReqBody fail");
-        }
-    }
+		if (0 != ret && SocketStreamError_Normal_Closed != ret)
+		{
+			post_stat->recv_error_ = true;
+		}
+	}
+	else
+	{
+		if (SocketStreamError_Normal_Closed != ret)
+		{
+			post_stat->send_error_ = true;
+			phxrpc::log(LOG_ERR, "ERR: sendReqBody fail");
+		}
+	}
 
-    return static_cast<int>(ret);
+	return static_cast<int>(ret);
 }
 
-int HttpClient::Head(BaseTcpStream & socket, const HttpRequest &req, HttpResponse *resp) {
-    int ret{HttpProtocol::SendReqHeader(socket, "HEAD", req)};
+int HttpClient::Head(BaseTcpStream& socket, const HttpRequest& req, HttpResponse* resp)
+{
+	int ret{ HttpProtocol::SendReqHeader(socket, "HEAD", req) };
 
-    if (0 == ret)
-        ret = HttpProtocol::RecvRespStartLine(socket, resp);
+	if (0 == ret)
+		ret = HttpProtocol::RecvRespStartLine(socket, resp);
 
-    if (0 == ret)
-        ret = HttpProtocol::RecvHeaders(socket, resp);
+	if (0 == ret)
+		ret = HttpProtocol::RecvHeaders(socket, resp);
 
-    return static_cast<int>(ret);
+	return static_cast<int>(ret);
 }
-
 
 }  // namespace phxrpc
 

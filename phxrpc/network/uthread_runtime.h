@@ -26,39 +26,43 @@ See the AUTHORS file for names of contributors.
 #include <functional>
 #include "uthread_context_base.h"
 
-namespace phxrpc {
+namespace phxrpc
+{
 
-class UThreadRuntime {
+class UThreadRuntime
+{
 public:
-    UThreadRuntime(size_t stack_size, const bool need_stack_protect);
-    ~UThreadRuntime();
+	UThreadRuntime(size_t stack_size, const bool need_stack_protect);
+	~UThreadRuntime();
 
-    int Create(UThreadFunc_t func, void * args);
-    int GetCurrUThread();
-    bool Yield();
-    bool Resume(size_t index);
-    bool IsAllDone();
-    int GetUnfinishedItemCount() const;
+	int Create(UThreadFunc_t func, void* args);
+	int GetCurrUThread();
+	bool Yield();
+	bool Resume(size_t index);
+	bool IsAllDone();
+	int GetUnfinishedItemCount() const;
 
-    void UThreadDoneCallback();
+	void UThreadDoneCallback();
 
 private:
-    struct ContextSlot {
-        ContextSlot() {
-            context = nullptr;
-            next_done_item = -1;
-        }
-        UThreadContext * context;
-        int next_done_item;
-        int status;
-    };
+	struct ContextSlot
+	{
+		ContextSlot()
+		{
+			context = nullptr;
+			next_done_item = -1;
+		}
+		UThreadContext* context;
+		int next_done_item;
+		int status;
+	};
 
-    size_t stack_size_;
-    std::vector<ContextSlot> context_list_;
-    int first_done_item_;
-    int current_uthread_;
-    int unfinished_item_count_;
-    bool need_stack_protect_;
+	size_t stack_size_;
+	std::vector<ContextSlot> context_list_;
+	int first_done_item_;
+	int current_uthread_;
+	int unfinished_item_count_;
+	bool need_stack_protect_;
 };
 
 } //namespace phxrpc

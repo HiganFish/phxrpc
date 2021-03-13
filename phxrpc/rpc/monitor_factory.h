@@ -28,27 +28,26 @@ See the AUTHORS file for names of contributors.
 #include "client_monitor.h"
 #include "server_monitor.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 typedef std::shared_ptr<ServerMonitor> ServerMonitorPtr;
 
-class MonitorFactory {
-  public:
-    MonitorFactory();
+class MonitorFactory
+{
+public:
+	MonitorFactory();
 
-    virtual ~MonitorFactory();
+	virtual ~MonitorFactory();
 
-    virtual ClientMonitorPtr CreateClientMonitor(const char *package_name);
-    virtual ServerMonitorPtr CreateServerMonitor(const char *package_name);
+	virtual ClientMonitorPtr CreateClientMonitor(const char* package_name);
+	virtual ServerMonitorPtr CreateServerMonitor(const char* package_name);
 
-    static void SetFactory(MonitorFactory *factory);
+	static void SetFactory(MonitorFactory* factory);
 
-    static MonitorFactory *GetFactory();
+	static MonitorFactory* GetFactory();
 
 };
-
 
 }  // namespace phxrpc
 

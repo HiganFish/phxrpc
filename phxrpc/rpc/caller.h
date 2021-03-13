@@ -25,47 +25,46 @@ See the AUTHORS file for names of contributors.
 
 #include "phxrpc/msg.h"
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 class BaseTcpStream;
 
-class Caller {
-  public:
-    Caller(BaseTcpStream &socket, ClientMonitor &client_monitor,
-           BaseMessageHandlerFactory &msg_handler_factory);
+class Caller
+{
+public:
+	Caller(BaseTcpStream& socket, ClientMonitor& client_monitor,
+		BaseMessageHandlerFactory& msg_handler_factory);
 
-    virtual ~Caller();
+	virtual ~Caller();
 
-    BaseRequest *GetRequest();
+	BaseRequest* GetRequest();
 
-    BaseResponse *GetResponse();
+	BaseResponse* GetResponse();
 
-    int Call(const google::protobuf::Message &req,
-             google::protobuf::Message *resp);
+	int Call(const google::protobuf::Message& req,
+		google::protobuf::Message* resp);
 
-    void set_uri(const char *const uri, const int cmd_id);
+	void set_uri(const char* const uri, const int cmd_id);
 
-    void set_keep_alive(const bool keep_alive);
+	void set_keep_alive(const bool keep_alive);
 
-  protected:
-    void MonitorReport(ClientMonitor &client_monitor, bool send_error,
-                       bool recv_error, size_t send_size, size_t recv_size,
-                       uint64_t call_begin, uint64_t call_end);
+protected:
+	void MonitorReport(ClientMonitor& client_monitor, bool send_error,
+		bool recv_error, size_t send_size, size_t recv_size,
+		uint64_t call_begin, uint64_t call_end);
 
-    BaseTcpStream &socket_;
-    ClientMonitor &client_monitor_;
-    int cmd_id_;
-    std::string uri_;
-    bool keep_alive_{false};
+	BaseTcpStream& socket_;
+	ClientMonitor& client_monitor_;
+	int cmd_id_;
+	std::string uri_;
+	bool keep_alive_{ false };
 
-    std::unique_ptr<BaseRequest> req_;
-    std::unique_ptr<BaseResponse> resp_;
+	std::unique_ptr<BaseRequest> req_;
+	std::unique_ptr<BaseResponse> resp_;
 
-    BaseMessageHandlerFactory &msg_handler_factory_;
+	BaseMessageHandlerFactory& msg_handler_factory_;
 };
-
 
 }  // namespace phxrpc
 

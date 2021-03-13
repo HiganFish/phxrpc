@@ -45,7 +45,7 @@ SET(SRCS
         phxrpc/msg.h
         phxrpc/network.h
         phxrpc/rpc.h
-)
+        )
 
 include_directories(.)
 

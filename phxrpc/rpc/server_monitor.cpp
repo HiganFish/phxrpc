@@ -24,64 +24,84 @@ See the AUTHORS file for names of contributors.
 #include <stdint.h>
 #include <stdio.h>
 
-namespace phxrpc {
+namespace phxrpc
+{
 
 //ServerMonitor begin
-ServerMonitor :: ServerMonitor() {
+ServerMonitor::ServerMonitor()
+{
 }
 
-ServerMonitor :: ~ServerMonitor() {
+ServerMonitor::~ServerMonitor()
+{
 }
 
-void ServerMonitor :: Accept( int count) {
+void ServerMonitor::Accept(int count)
+{
 }
 
-void ServerMonitor :: AcceptFail( int count ) {
+void ServerMonitor::AcceptFail(int count)
+{
 }
 
-void ServerMonitor :: RequestCount( int count ) {
+void ServerMonitor::RequestCount(int count)
+{
 }
 
-void ServerMonitor :: ResponseCount( int count ) {
+void ServerMonitor::ResponseCount(int count)
+{
 }
 
-void ServerMonitor :: SendBytes( size_t bytes ) {
+void ServerMonitor::SendBytes(size_t bytes)
+{
 }
 
-void ServerMonitor :: RecvBytes( size_t bytes ) {
+void ServerMonitor::RecvBytes(size_t bytes)
+{
 }
 
-void ServerMonitor :: RequestCost( uint64_t cost_ms ) {
+void ServerMonitor::RequestCost(uint64_t cost_ms)
+{
 }
 
-void ServerMonitor :: ReadError( int count ) {
+void ServerMonitor::ReadError(int count)
+{
 }
 
-void ServerMonitor :: SendError( int count ) {
+void ServerMonitor::SendError(int count)
+{
 }
 
-void ServerMonitor :: OutOfQueue( int count ) {
+void ServerMonitor::OutOfQueue(int count)
+{
 }
 
-void ServerMonitor :: QueueDelay( uint64_t cost_ms ) {
+void ServerMonitor::QueueDelay(uint64_t cost_ms)
+{
 }
 
-void ServerMonitor :: FastRejectAfterAccept( int count ) {
-}
-    
-void ServerMonitor :: FastRejectAfterRead( int count ) {
+void ServerMonitor::FastRejectAfterAccept(int count)
+{
 }
 
-void ServerMonitor :: WrokerInQueueTimeout( int count ) {
+void ServerMonitor::FastRejectAfterRead(int count)
+{
 }
 
-void ServerMonitor :: WaitInInQueue( uint64_t cost_ms ) {
+void ServerMonitor::WrokerInQueueTimeout(int count)
+{
 }
 
-void ServerMonitor :: WaitInOutQueue( uint64_t cost_ms ) {
+void ServerMonitor::WaitInInQueue(uint64_t cost_ms)
+{
 }
 
-void ServerMonitor :: SvrCall( int cmdid, const char * method_name, int count ) {
+void ServerMonitor::WaitInOutQueue(uint64_t cost_ms)
+{
+}
+
+void ServerMonitor::SvrCall(int cmdid, const char* method_name, int count)
+{
 }
 
 //ServerMonitor end

@@ -24,27 +24,26 @@ See the AUTHORS file for names of contributors.
 #include "phxrpc/msg/base_msg.h"
 #include "phxrpc/network.h"
 
+namespace phxrpc
+{
 
-namespace phxrpc {
+class BaseMessageHandler
+{
+public:
+	BaseMessageHandler() = default;
+	virtual ~BaseMessageHandler() = default;
 
+	virtual int RecvRequest(BaseTcpStream& socket, BaseRequest*& req) = 0;
+	virtual int RecvResponse(BaseTcpStream& socket, BaseResponse*& resp) = 0;
 
-class BaseMessageHandler {
-  public:
-    BaseMessageHandler() = default;
-    virtual ~BaseMessageHandler() = default;
+	virtual int GenRequest(BaseRequest*& req) = 0;
+	virtual int GenResponse(BaseResponse*& resp) = 0;
 
-    virtual int RecvRequest(BaseTcpStream &socket, BaseRequest *&req) = 0;
-    virtual int RecvResponse(BaseTcpStream &socket, BaseResponse *&resp) = 0;
+	virtual bool keep_alive() const = 0;
 
-    virtual int GenRequest(BaseRequest *&req) = 0;
-    virtual int GenResponse(BaseResponse *&resp) = 0;
-
-    virtual bool keep_alive() const = 0;
-
-  protected:
-    BaseRequest *req_{nullptr};
+protected:
+	BaseRequest* req_{ nullptr };
 };
-
 
 }
 

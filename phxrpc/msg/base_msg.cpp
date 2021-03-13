@@ -25,42 +25,47 @@ See the AUTHORS file for names of contributors.
 #include <cstdlib>
 #include <cstring>
 
-
-namespace phxrpc {
-
+namespace phxrpc
+{
 
 using namespace std;
 
-
-BaseMessage::BaseMessage() {
+BaseMessage::BaseMessage()
+{
 }
 
-BaseMessage::~BaseMessage() {
+BaseMessage::~BaseMessage()
+{
 }
 
-
-BaseRequest::BaseRequest() {
+BaseRequest::BaseRequest()
+{
 }
 
-BaseRequest::~BaseRequest() {
+BaseRequest::~BaseRequest()
+{
 }
 
-void BaseRequest::set_uri(const char *uri) {
-    if (nullptr != uri) {
-        uri_ = string(uri);
-    }
+void BaseRequest::set_uri(const char* uri)
+{
+	if (nullptr != uri)
+	{
+		uri_ = string(uri);
+	}
 }
 
-const char *BaseRequest::uri() const {
-    return uri_.c_str();
+const char* BaseRequest::uri() const
+{
+	return uri_.c_str();
 }
 
-
-BaseResponse::BaseResponse() {
+BaseResponse::BaseResponse()
+{
 }
 
-BaseResponse::~BaseResponse() {}
-
+BaseResponse::~BaseResponse()
+{
+}
 
 }
 
