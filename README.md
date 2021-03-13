@@ -10,7 +10,7 @@
 - test代码中部分符号错误
 
 gcc 8.3.1 下完全编译通过 如果不想编译test 则将根目录的CMakeLists.txt的
-`add_subdirectory(test)`注释
+`add_subdirectory(test)`注释 默认注释
 
 ```
 [root@fish build]# make -j4
@@ -27,6 +27,8 @@ gcc 8.3.1 下完全编译通过 如果不想编译test 则将根目录的CMakeLi
 [ 96%] Built target test_uthread
 [100%] Built target test_hsha_server
 ```
+
+项目中增加了一个抽卡示例 客户端设置抽卡人id和抽卡次数 服务器返回本次抽卡结果
 
 # io流
 

@@ -52,4 +52,5 @@ include_directories(.)
 add_library(phxrpc ${SRCS})
 target_link_libraries(phxrpc protobuf pthread)
 
-add_subdirectory(test)
+# add_subdirectory(test)
+add_subdirectory(example)
